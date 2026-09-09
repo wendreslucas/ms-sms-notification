@@ -1,4 +1,10 @@
-import { BadRequestException, ConflictException, Injectable, OnModuleInit } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  Injectable,
+  NotFoundException,
+  OnModuleInit,
+} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PinoLogger } from 'nestjs-pino';
@@ -11,11 +17,13 @@ import { IdempotencyLock, IdempotencyService } from '../../idempotency/idempoten
 import { QueueService } from '../../queue/queue.service';
 import { SendSmsDto } from '../dto/send-sms.dto';
 import { SendSmsResponseDto } from '../dto/send-sms-response.dto';
+import { RequeueSmsResponseDto } from '../dto/requeue-sms-response.dto';
 import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
 
 const POSTGRES_UNIQUE_VIOLATION = '23505';
 const QUEUE_PUBLISH_FAILED_ERROR = 'QUEUE_PUBLISH_FAILED';
+const REQUEUE_PUBLISH_FAILED_ERROR = 'REQUEUE_PUBLISH_FAILED';
 
 interface QueryFailedDriverError {
   code?: string;
@@ -173,7 +181,6 @@ export class SmsService implements OnModuleInit {
       .update(SmsMessage)
       .set({
         status: SmsStatus.PROCESSING,
-        attempts: () => '"attempts" + 1',
         lastError: null,
       })
       .where('id = :messageId', { messageId })
@@ -181,6 +188,17 @@ export class SmsService implements OnModuleInit {
       .execute();
 
     return (updateResult.affected ?? 0) > 0;
+  }
+
+  async incrementAttempts(messageId: string): Promise<void> {
+    await this.smsMessageRepository
+      .createQueryBuilder()
+      .update(SmsMessage)
+      .set({
+        attempts: () => '"attempts" + 1',
+      })
+      .where('id = :messageId', { messageId })
+      .execute();
   }
 
   async markSent(
@@ -211,6 +229,94 @@ export class SmsService implements OnModuleInit {
         failedAt: new Date(),
       },
     );
+  }
+
+  async markFatalFailure(
+    messageId: string,
+    selectedProvider: string,
+    lastError: string,
+  ): Promise<void> {
+    await this.smsMessageRepository.update(
+      { id: messageId },
+      {
+        status: SmsStatus.FATAL_FAILURE,
+        selectedProvider,
+        providerMessageId: null,
+        lastError,
+        sentAt: null,
+        failedAt: new Date(),
+      },
+    );
+  }
+
+  async requeue(messageId: string): Promise<RequeueSmsResponseDto> {
+    this.logger.info({ event: LogEvent.MESSAGE_REQUEUE_REQUESTED, messageId });
+
+    const message = await this.findById(messageId);
+
+    if (!message) {
+      this.logger.warn({ event: LogEvent.REQUEUE_REJECTED, messageId }, 'SMS requeue not found');
+      throw new NotFoundException(`SMS message "${messageId}" was not found.`);
+    }
+
+    if (message.status !== SmsStatus.FATAL_FAILURE) {
+      this.logger.warn(
+        {
+          event: LogEvent.REQUEUE_REJECTED,
+          messageId,
+          status: message.status,
+        },
+        'SMS requeue rejected because message is not eligible',
+      );
+      throw new ConflictException('Only messages in FATAL_FAILURE can be requeued.');
+    }
+
+    const transitioned = await this.transitionFatalFailureToQueued(messageId);
+
+    if (!transitioned) {
+      this.logger.warn(
+        {
+          event: LogEvent.REQUEUE_REJECTED,
+          messageId,
+        },
+        'SMS requeue rejected because another request already changed the message state',
+      );
+      throw new ConflictException('SMS message is no longer eligible for requeue.');
+    }
+
+    try {
+      await this.queueService.requeueSms(messageId);
+    } catch (error) {
+      await this.restoreFatalFailureAfterRequeueFailure(message, this.toErrorMessage(error));
+      this.logger.error(
+        {
+          event: LogEvent.REQUEUE_FAILED,
+          messageId,
+          err: this.toErrorMessage(error),
+        },
+        'Failed to publish requeued SMS job',
+      );
+      throw new QueuePublishException();
+    }
+
+    this.logger.info(
+      {
+        event: LogEvent.MESSAGE_REQUEUED,
+        messageId,
+        status: SmsStatus.QUEUED,
+        attempts: message.attempts,
+      },
+      'SMS message requeued',
+    );
+
+    return {
+      status: 'success',
+      data: {
+        messageId: message.id,
+        status: SmsStatus.QUEUED,
+        createdAt: message.createdAt.toISOString(),
+      },
+    };
   }
 
   private validateMessageLength(message: string): void {
@@ -274,6 +380,39 @@ export class SmsService implements OnModuleInit {
 
   private async markQueuePublishFailed(messageId: string): Promise<void> {
     await this.updateStatus(messageId, SmsStatus.FAILED, QUEUE_PUBLISH_FAILED_ERROR);
+  }
+
+  private async transitionFatalFailureToQueued(messageId: string): Promise<boolean> {
+    const updateResult = await this.smsMessageRepository.update(
+      { id: messageId, status: SmsStatus.FATAL_FAILURE },
+      {
+        status: SmsStatus.QUEUED,
+        selectedProvider: null,
+        providerMessageId: null,
+        lastError: null,
+        sentAt: null,
+        failedAt: null,
+      },
+    );
+
+    return (updateResult.affected ?? 0) > 0;
+  }
+
+  private async restoreFatalFailureAfterRequeueFailure(
+    message: SmsMessage,
+    enqueueError: string,
+  ): Promise<void> {
+    await this.smsMessageRepository.update(
+      { id: message.id },
+      {
+        status: SmsStatus.FATAL_FAILURE,
+        selectedProvider: message.selectedProvider,
+        providerMessageId: null,
+        lastError: `${REQUEUE_PUBLISH_FAILED_ERROR}: ${enqueueError}`,
+        sentAt: null,
+        failedAt: message.failedAt ?? new Date(),
+      },
+    );
   }
 
   private async releaseLock(lock: IdempotencyLock): Promise<void> {

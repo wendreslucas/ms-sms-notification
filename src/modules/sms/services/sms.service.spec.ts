@@ -1,3 +1,4 @@
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
@@ -29,6 +30,7 @@ type IdempotencyServiceMock = {
 
 type QueueServiceMock = {
   enqueueSms: jest.Mock<Promise<void>, [string]>;
+  requeueSms: jest.Mock<Promise<void>, [string]>;
 };
 
 const dto: SendSmsDto = {
@@ -93,6 +95,7 @@ describe('SmsService', () => {
 
     queueService = {
       enqueueSms: jest.fn(async (_messageId: string) => undefined),
+      requeueSms: jest.fn(async (_messageId: string) => undefined),
     };
 
     const moduleRef = await Test.createTestingModule({
@@ -204,5 +207,94 @@ describe('SmsService', () => {
 
     expect(queueService.enqueueSms).not.toHaveBeenCalled();
     expect(response.data.messageId).toBe('existing-id');
+  });
+
+  it('requeues a fatal failure without resetting attempts or creating a new message', async () => {
+    const fatalMessage = buildMessage({
+      status: SmsStatus.FATAL_FAILURE,
+      attempts: 6,
+      selectedProvider: 'bird',
+      lastError: 'bird unavailable',
+      failedAt: new Date('2026-08-05T21:35:00.000Z'),
+    });
+    repository.findOne.mockResolvedValue(fatalMessage);
+    repository.update.mockResolvedValue({ affected: 1 });
+
+    const response = await service.requeue(fatalMessage.id);
+
+    expect(repository.update).toHaveBeenCalledWith(
+      { id: fatalMessage.id, status: SmsStatus.FATAL_FAILURE },
+      expect.objectContaining({
+        status: SmsStatus.QUEUED,
+        selectedProvider: null,
+        providerMessageId: null,
+        lastError: null,
+        sentAt: null,
+        failedAt: null,
+      }),
+    );
+    expect(queueService.requeueSms).toHaveBeenCalledWith(fatalMessage.id);
+    expect(repository.create).not.toHaveBeenCalled();
+    expect(response).toEqual({
+      status: 'success',
+      data: {
+        messageId: fatalMessage.id,
+        status: SmsStatus.QUEUED,
+        createdAt: '2026-08-05T21:30:00.000Z',
+      },
+    });
+  });
+
+  it('rejects requeue when the message does not exist', async () => {
+    repository.findOne.mockResolvedValue(null);
+
+    await expect(service.requeue('missing-id')).rejects.toBeInstanceOf(NotFoundException);
+
+    expect(queueService.requeueSms).not.toHaveBeenCalled();
+  });
+
+  it('rejects requeue when the message is not in fatal failure', async () => {
+    repository.findOne.mockResolvedValue(buildMessage({ status: SmsStatus.SENT }));
+
+    await expect(service.requeue('c8d488e9-f308-43e8-8df0cb5134ef')).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+
+    expect(queueService.requeueSms).not.toHaveBeenCalled();
+  });
+
+  it('rejects concurrent requeue when the atomic transition loses the race', async () => {
+    repository.findOne.mockResolvedValue(buildMessage({ status: SmsStatus.FATAL_FAILURE }));
+    repository.update.mockResolvedValue({ affected: 0 });
+
+    await expect(service.requeue('c8d488e9-f308-43e8-8df0cb5134ef')).rejects.toBeInstanceOf(
+      ConflictException,
+    );
+
+    expect(queueService.requeueSms).not.toHaveBeenCalled();
+  });
+
+  it('restores fatal failure when requeue job publication fails', async () => {
+    const fatalMessage = buildMessage({
+      status: SmsStatus.FATAL_FAILURE,
+      selectedProvider: 'bird',
+      lastError: 'bird unavailable',
+      failedAt: new Date('2026-08-05T21:35:00.000Z'),
+    });
+    repository.findOne.mockResolvedValue(fatalMessage);
+    repository.update.mockResolvedValue({ affected: 1 });
+    queueService.requeueSms.mockRejectedValue(new Error('redis unavailable'));
+
+    await expect(service.requeue(fatalMessage.id)).rejects.toBeInstanceOf(QueuePublishException);
+
+    expect(repository.update).toHaveBeenNthCalledWith(
+      2,
+      { id: fatalMessage.id },
+      expect.objectContaining({
+        status: SmsStatus.FATAL_FAILURE,
+        selectedProvider: 'bird',
+        lastError: 'REQUEUE_PUBLISH_FAILED: redis unavailable',
+      }),
+    );
   });
 });

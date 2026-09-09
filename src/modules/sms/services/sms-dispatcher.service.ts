@@ -1,10 +1,14 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
 import { maskPhoneNumber } from '../../../common/utils/mask-phone-number';
+import { calculateExponentialBackoff } from '../../../common/utils/retry.util';
+import { ISmsProvider, SendSmsResult } from '../../providers/interfaces/sms-provider.interface';
 import { ProviderRegistryService } from '../../providers/provider-registry.service';
-import { SendSmsResult } from '../../providers/interfaces/sms-provider.interface';
+import { ProviderRateLimiterService } from '../../providers/rate-limiting/provider-rate-limiter.service';
+import { QueueService } from '../../queue/queue.service';
 import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
 import { SmsService } from './sms.service';
@@ -20,8 +24,11 @@ const TERMINAL_OR_POST_SEND_STATUSES = new Set<SmsStatus>([
 @Injectable()
 export class SmsDispatcherService implements OnModuleInit {
   constructor(
+    private readonly configService: ConfigService,
     private readonly smsService: SmsService,
     private readonly providerRegistry: ProviderRegistryService,
+    private readonly rateLimiter: ProviderRateLimiterService,
+    private readonly queueService: QueueService,
     private readonly logger: PinoLogger,
   ) {}
 
@@ -63,55 +70,7 @@ export class SmsDispatcherService implements OnModuleInit {
       return;
     }
 
-    const attempt = message.attempts + 1;
-    const provider = this.providerRegistry.getPrimaryProvider();
-
-    this.logger.info(
-      {
-        event: LogEvent.PROVIDER_ATTEMPT,
-        messageId: message.id,
-        provider: provider.providerName,
-        attempt,
-        phone: maskPhoneNumber(message.recipientPhone),
-      },
-      'Attempting SMS provider send',
-    );
-
-    const result = await this.sendWithProvider(message, provider.providerName);
-
-    if (result.success) {
-      await this.smsService.markSent(
-        message.id,
-        provider.providerName,
-        result.providerMessageId ?? null,
-      );
-      this.logger.info(
-        {
-          event: LogEvent.MESSAGE_SENT,
-          messageId: message.id,
-          provider: provider.providerName,
-          attempt,
-        },
-        'SMS message sent',
-      );
-      return;
-    }
-
-    await this.smsService.markFailed(
-      message.id,
-      provider.providerName,
-      result.error ?? 'SMS provider returned an unsuccessful response.',
-    );
-    this.logger.warn(
-      {
-        event: LogEvent.MESSAGE_FAILED,
-        messageId: message.id,
-        provider: provider.providerName,
-        attempt,
-        retryable: result.isRetryable,
-      },
-      'SMS provider send failed',
-    );
+    await this.dispatchAcrossProviders(message);
   }
 
   private shouldSkip(message: SmsMessage): boolean {
@@ -120,12 +79,152 @@ export class SmsDispatcherService implements OnModuleInit {
     );
   }
 
+  private async dispatchAcrossProviders(message: SmsMessage): Promise<void> {
+    const providers = this.providerRegistry.getProviders();
+    const maxAttemptsPerProvider = this.configService.getOrThrow<number>('sms.maxRetries');
+    const retryBaseDelayMs = this.configService.getOrThrow<number>('sms.retryBaseDelayMs');
+    let totalAttempts = message.attempts;
+    let lastProviderName = providers[0]?.providerName ?? 'unknown';
+    let lastError = 'No SMS provider is configured.';
+
+    for (let providerIndex = 0; providerIndex < providers.length; providerIndex += 1) {
+      const provider = providers[providerIndex];
+
+      if (!provider) {
+        continue;
+      }
+
+      lastProviderName = provider.providerName;
+
+      for (
+        let providerAttempt = 1;
+        providerAttempt <= maxAttemptsPerProvider;
+        providerAttempt += 1
+      ) {
+        totalAttempts += 1;
+        await this.smsService.incrementAttempts(message.id);
+        await this.rateLimiter.throttle(provider.providerName);
+
+        this.logger.info(
+          {
+            event: LogEvent.PROVIDER_ATTEMPT,
+            messageId: message.id,
+            provider: provider.providerName,
+            providerAttempt,
+            totalAttempts,
+            phone: maskPhoneNumber(message.recipientPhone),
+          },
+          'Attempting SMS provider send',
+        );
+
+        const result = await this.sendWithProvider(message, provider);
+
+        if (result.success) {
+          await this.smsService.markSent(
+            message.id,
+            provider.providerName,
+            result.providerMessageId ?? null,
+          );
+          this.logger.info(
+            {
+              event: LogEvent.MESSAGE_SENT,
+              messageId: message.id,
+              provider: provider.providerName,
+              providerAttempt,
+              totalAttempts,
+            },
+            'SMS message sent',
+          );
+          return;
+        }
+
+        lastError = result.error ?? 'SMS provider returned an unsuccessful response.';
+
+        if (!result.isRetryable || providerAttempt >= maxAttemptsPerProvider) {
+          break;
+        }
+
+        const delayMs = Math.max(
+          result.retryAfterMs ?? 0,
+          calculateExponentialBackoff(providerAttempt, retryBaseDelayMs),
+        );
+
+        this.logger.warn(
+          {
+            event: LogEvent.PROVIDER_RETRY,
+            messageId: message.id,
+            provider: provider.providerName,
+            providerAttempt,
+            nextProviderAttempt: providerAttempt + 1,
+            totalAttempts,
+            delayMs,
+            retryable: result.isRetryable,
+          },
+          'SMS provider send will be retried',
+        );
+
+        await this.sleep(delayMs);
+      }
+
+      const nextProvider = providers[providerIndex + 1];
+
+      if (nextProvider) {
+        this.logger.warn(
+          {
+            event: LogEvent.PROVIDER_FAILOVER,
+            messageId: message.id,
+            fromProvider: provider.providerName,
+            toProvider: nextProvider.providerName,
+            totalAttempts,
+          },
+          'SMS provider failover started',
+        );
+      }
+    }
+
+    await this.smsService.markFatalFailure(message.id, lastProviderName, lastError);
+    this.logger.warn(
+      {
+        event: LogEvent.MESSAGE_FAILED,
+        messageId: message.id,
+        provider: lastProviderName,
+        attempts: totalAttempts,
+        error: lastError,
+      },
+      'SMS message reached fatal failure after all configured providers were exhausted',
+    );
+
+    try {
+      await this.queueService.enqueueDeadLetter(message.id);
+    } catch (error) {
+      this.logger.error(
+        {
+          event: LogEvent.DLQ_PUBLISH_FAILED,
+          messageId: message.id,
+          status: SmsStatus.FATAL_FAILURE,
+          attempts: totalAttempts,
+          err: error instanceof Error ? error.message : 'Unknown DLQ publication error',
+        },
+        'Failed to publish SMS message to DLQ',
+      );
+      throw error;
+    }
+
+    this.logger.warn(
+      {
+        event: LogEvent.MESSAGE_DLQ,
+        messageId: message.id,
+        status: SmsStatus.FATAL_FAILURE,
+        attempts: totalAttempts,
+      },
+      'SMS message published to DLQ',
+    );
+  }
+
   private async sendWithProvider(
     message: SmsMessage,
-    providerName: string,
+    provider: ISmsProvider,
   ): Promise<SendSmsResult> {
-    const provider = this.providerRegistry.getPrimaryProvider();
-
     try {
       return await provider.sendSms({
         to: message.recipientPhone,
@@ -135,9 +234,18 @@ export class SmsDispatcherService implements OnModuleInit {
     } catch (error) {
       return {
         success: false,
-        error: error instanceof Error ? error.message : `Provider ${providerName} threw an error.`,
+        error:
+          error instanceof Error
+            ? error.message
+            : `Provider ${provider.providerName} threw an error.`,
         isRetryable: true,
       };
     }
+  }
+
+  private async sleep(milliseconds: number): Promise<void> {
+    await new Promise((resolve) => {
+      setTimeout(resolve, milliseconds);
+    });
   }
 }

@@ -11,4 +11,7 @@ export type TwilioClientFactory = (accountSid: string, authToken: string) => Twi
 export const TWILIO_CLIENT_FACTORY = 'TWILIO_CLIENT_FACTORY';
 
 export const defaultTwilioClientFactory: TwilioClientFactory = (accountSid, authToken) =>
-  Twilio(accountSid, authToken);
+  Twilio(accountSid, authToken, {
+    autoRetry: false,
+    maxRetries: 0,
+  });

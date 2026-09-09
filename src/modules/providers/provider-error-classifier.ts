@@ -15,6 +15,7 @@ const BIRD_RETRYABLE_ERROR_NAMES = new Set([
 export interface NormalizedProviderError {
   message: string;
   isRetryable: boolean;
+  retryAfterMs?: number;
 }
 
 export function normalizeTwilioError(error: unknown): NormalizedProviderError {
@@ -24,6 +25,7 @@ export function normalizeTwilioError(error: unknown): NormalizedProviderError {
   return {
     message: sanitizeErrorMessage(error),
     isRetryable: isRetryableTransportError(code, statusCode),
+    retryAfterMs: extractRetryAfterMs(error),
   };
 }
 
@@ -34,6 +36,7 @@ export function normalizeBirdError(error: unknown): NormalizedProviderError {
     return {
       message: sanitizeErrorMessage(error),
       isRetryable: true,
+      retryAfterMs: extractRetryAfterMs(error),
     };
   }
 
@@ -41,6 +44,7 @@ export function normalizeBirdError(error: unknown): NormalizedProviderError {
     return {
       message: sanitizeErrorMessage(error),
       isRetryable: false,
+      retryAfterMs: extractRetryAfterMs(error),
     };
   }
 
@@ -50,6 +54,7 @@ export function normalizeBirdError(error: unknown): NormalizedProviderError {
   return {
     message: sanitizeErrorMessage(error),
     isRetryable: isRetryableTransportError(code, statusCode),
+    retryAfterMs: extractRetryAfterMs(error),
   };
 }
 
@@ -90,6 +95,48 @@ function getStringProperty(value: unknown, propertyName: string): string | undef
   const propertyValue = value[propertyName];
 
   return typeof propertyValue === 'string' ? propertyValue : undefined;
+}
+
+function extractRetryAfterMs(error: unknown): number | undefined {
+  const retryAfterMs = getNumericProperty(error, 'retryAfterMs');
+
+  if (retryAfterMs !== undefined && retryAfterMs > 0) {
+    return retryAfterMs;
+  }
+
+  const retryAfter = getNumericProperty(error, 'retryAfter') ?? getRetryAfterHeader(error);
+
+  if (retryAfter !== undefined && retryAfter > 0) {
+    return retryAfter * 1000;
+  }
+
+  return undefined;
+}
+
+function getRetryAfterHeader(error: unknown): number | undefined {
+  if (!isRecord(error)) {
+    return undefined;
+  }
+
+  const headers = error.headers;
+
+  if (!isRecord(headers)) {
+    return undefined;
+  }
+
+  const retryAfterHeader = headers['retry-after'] ?? headers['Retry-After'];
+
+  if (typeof retryAfterHeader === 'number') {
+    return retryAfterHeader;
+  }
+
+  if (typeof retryAfterHeader === 'string' && retryAfterHeader.trim().length > 0) {
+    const parsedValue = Number(retryAfterHeader);
+
+    return Number.isFinite(parsedValue) ? parsedValue : undefined;
+  }
+
+  return undefined;
 }
 
 function isRecord(value: unknown): value is Record<string, unknown> {

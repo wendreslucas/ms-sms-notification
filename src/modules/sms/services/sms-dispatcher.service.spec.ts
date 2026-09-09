@@ -1,9 +1,12 @@
+import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
 
 import { ISmsProvider } from '../../providers/interfaces/sms-provider.interface';
 import { ProviderRegistryService } from '../../providers/provider-registry.service';
+import { ProviderRateLimiterService } from '../../providers/rate-limiting/provider-rate-limiter.service';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
+import { QueueService } from '../../queue/queue.service';
 import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
 import { SmsDispatcherService } from './sms-dispatcher.service';
@@ -12,15 +15,27 @@ import { SmsService } from './sms.service';
 type SmsServiceMock = {
   findById: jest.Mock<Promise<SmsMessage | null>, [string]>;
   markProcessing: jest.Mock<Promise<boolean>, [string]>;
+  incrementAttempts: jest.Mock<Promise<void>, [string]>;
   markSent: jest.Mock<Promise<void>, [string, string, string | null]>;
   markFailed: jest.Mock<Promise<void>, [string, string, string]>;
+  markFatalFailure: jest.Mock<Promise<void>, [string, string, string]>;
 };
+
+type RateLimiterMock = {
+  throttle: jest.Mock<Promise<void>, [string]>;
+};
+
+type QueueServiceMock = {
+  enqueueDeadLetter: jest.Mock<Promise<void>, [string]>;
+};
+
+const MESSAGE_ID = 'c8d488e9-f308-43e8-8df0cb5134ef';
 
 function buildMessage(overrides: Partial<SmsMessage> = {}): SmsMessage {
   const now = new Date('2026-08-05T21:30:00.000Z');
 
   return {
-    id: 'c8d488e9-f308-43e8-8df0cb5134ef',
+    id: MESSAGE_ID,
     idempotencyKey: 'idem-key',
     recipientPhone: '+14155552671',
     messageBody: 'Your verification code is 482019',
@@ -42,12 +57,17 @@ function buildMessage(overrides: Partial<SmsMessage> = {}): SmsMessage {
 describe('SmsDispatcherService', () => {
   let dispatcher: SmsDispatcherService;
   let smsService: SmsServiceMock;
-  let provider: ISmsProvider;
+  let rateLimiter: RateLimiterMock;
+  let queueService: QueueServiceMock;
+  let providers: ISmsProvider[];
+  let twilioProvider: ISmsProvider;
+  let birdProvider: ISmsProvider;
 
   beforeEach(async () => {
     smsService = {
       findById: jest.fn(async (_messageId: string) => buildMessage()),
       markProcessing: jest.fn(async (_messageId: string) => true),
+      incrementAttempts: jest.fn(async (_messageId: string) => undefined),
       markSent: jest.fn(
         async (_messageId: string, _provider: string, _providerMessageId: string | null) =>
           undefined,
@@ -55,19 +75,42 @@ describe('SmsDispatcherService', () => {
       markFailed: jest.fn(
         async (_messageId: string, _provider: string, _lastError: string) => undefined,
       ),
+      markFatalFailure: jest.fn(
+        async (_messageId: string, _provider: string, _lastError: string) => undefined,
+      ),
     };
-    provider = {
-      providerName: SmsProviderName.TWILIO,
-      sendSms: jest.fn(async () => ({
-        success: true,
-        providerMessageId: 'SM123',
-        isRetryable: false,
-      })),
+    rateLimiter = {
+      throttle: jest.fn(async (_providerName: string) => undefined),
     };
+    queueService = {
+      enqueueDeadLetter: jest.fn(async (_messageId: string) => undefined),
+    };
+    twilioProvider = buildProvider(SmsProviderName.TWILIO, 'SM_TWILIO');
+    birdProvider = buildProvider(SmsProviderName.BIRD, 'BIRD_SMS');
+    providers = [twilioProvider, birdProvider];
 
     const moduleRef = await Test.createTestingModule({
       providers: [
         SmsDispatcherService,
+        {
+          provide: ConfigService,
+          useValue: {
+            getOrThrow: (key: string) => {
+              const values = new Map<string, number>([
+                ['sms.maxRetries', 3],
+                ['sms.retryBaseDelayMs', 1],
+              ]);
+
+              const value = values.get(key);
+
+              if (value === undefined) {
+                throw new Error(`Missing config ${key}`);
+              }
+
+              return value;
+            },
+          },
+        },
         {
           provide: SmsService,
           useValue: smsService,
@@ -75,8 +118,17 @@ describe('SmsDispatcherService', () => {
         {
           provide: ProviderRegistryService,
           useValue: {
-            getPrimaryProvider: () => provider,
+            getProviders: () => providers,
+            getPrimaryProvider: () => providers[0],
           },
+        },
+        {
+          provide: ProviderRateLimiterService,
+          useValue: rateLimiter,
+        },
+        {
+          provide: QueueService,
+          useValue: queueService,
         },
         {
           provide: PinoLogger,
@@ -94,18 +146,22 @@ describe('SmsDispatcherService', () => {
   });
 
   it('processes a queued message successfully', async () => {
-    await dispatcher.dispatch('c8d488e9-f308-43e8-8df0cb5134ef');
+    providers = [twilioProvider];
 
-    expect(smsService.markProcessing).toHaveBeenCalledWith('c8d488e9-f308-43e8-8df0cb5134ef');
-    expect(provider.sendSms).toHaveBeenCalledWith({
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(smsService.markProcessing).toHaveBeenCalledWith(MESSAGE_ID);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(1);
+    expect(rateLimiter.throttle).toHaveBeenCalledWith(SmsProviderName.TWILIO);
+    expect(twilioProvider.sendSms).toHaveBeenCalledWith({
       to: '+14155552671',
       body: 'Your verification code is 482019',
-      referenceId: 'c8d488e9-f308-43e8-8df0cb5134ef',
+      referenceId: MESSAGE_ID,
     });
     expect(smsService.markSent).toHaveBeenCalledWith(
-      'c8d488e9-f308-43e8-8df0cb5134ef',
+      MESSAGE_ID,
       SmsProviderName.TWILIO,
-      'SM123',
+      'SM_TWILIO',
     );
   });
 
@@ -116,47 +172,215 @@ describe('SmsDispatcherService', () => {
       'SMS message "missing-id" was not found.',
     );
 
-    expect(provider.sendSms).not.toHaveBeenCalled();
+    expect(twilioProvider.sendSms).not.toHaveBeenCalled();
   });
 
   it('skips messages already sent', async () => {
     smsService.findById.mockResolvedValue(buildMessage({ status: SmsStatus.SENT }));
 
-    await dispatcher.dispatch('c8d488e9-f308-43e8-8df0cb5134ef');
+    await dispatcher.dispatch(MESSAGE_ID);
 
-    expect(provider.sendSms).not.toHaveBeenCalled();
+    expect(twilioProvider.sendSms).not.toHaveBeenCalled();
     expect(smsService.markProcessing).not.toHaveBeenCalled();
   });
 
-  it('marks retryable provider failure as failed without failover', async () => {
-    provider.sendSms = jest.fn(async () => ({
+  it('retries a retryable failure and succeeds with the same provider', async () => {
+    providers = [twilioProvider];
+    twilioProvider.sendSms = jest
+      .fn()
+      .mockResolvedValueOnce({
+        success: false,
+        error: 'rate limited',
+        isRetryable: true,
+        retryAfterMs: 1,
+      })
+      .mockResolvedValueOnce({
+        success: true,
+        providerMessageId: 'SM_AFTER_RETRY',
+        isRetryable: false,
+      });
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(2);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(2);
+    expect(smsService.markSent).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.TWILIO,
+      'SM_AFTER_RETRY',
+    );
+    expect(smsService.markFailed).not.toHaveBeenCalled();
+  });
+
+  it('fails over after retryable failures are exhausted', async () => {
+    twilioProvider.sendSms = jest.fn(async () => ({
       success: false,
-      error: 'rate limited',
+      error: 'twilio unavailable',
       isRetryable: true,
+      retryAfterMs: 1,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'BIRD_AFTER_FAILOVER',
+      isRetryable: false,
     }));
 
-    await dispatcher.dispatch('c8d488e9-f308-43e8-8df0cb5134ef');
+    await dispatcher.dispatch(MESSAGE_ID);
 
-    expect(smsService.markFailed).toHaveBeenCalledWith(
-      'c8d488e9-f308-43e8-8df0cb5134ef',
-      SmsProviderName.TWILIO,
-      'rate limited',
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(4);
+    expect(smsService.markSent).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.BIRD,
+      'BIRD_AFTER_FAILOVER',
     );
   });
 
-  it('marks non-retryable provider failure as failed without failover', async () => {
-    provider.sendSms = jest.fn(async () => ({
+  it('fails over immediately after a non-retryable provider failure', async () => {
+    twilioProvider.sendSms = jest.fn(async () => ({
       success: false,
       error: 'invalid phone',
       isRetryable: false,
     }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'BIRD_PERMANENT_FAILOVER',
+      isRetryable: false,
+    }));
 
-    await dispatcher.dispatch('c8d488e9-f308-43e8-8df0cb5134ef');
+    await dispatcher.dispatch(MESSAGE_ID);
 
-    expect(smsService.markFailed).toHaveBeenCalledWith(
-      'c8d488e9-f308-43e8-8df0cb5134ef',
-      SmsProviderName.TWILIO,
-      'invalid phone',
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(2);
+    expect(smsService.markSent).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.BIRD,
+      'BIRD_PERMANENT_FAILOVER',
     );
   });
+
+  it('respects provider priority inversion', async () => {
+    providers = [birdProvider, twilioProvider];
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'bird unavailable',
+      isRetryable: false,
+    }));
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'SM_PRIORITY_INVERSION',
+      isRetryable: false,
+    }));
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(getFirstCallOrder(birdProvider)).toBeLessThan(getFirstCallOrder(twilioProvider));
+    expect(smsService.markSent).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.TWILIO,
+      'SM_PRIORITY_INVERSION',
+    );
+  });
+
+  it('marks fatal failure and publishes DLQ after all retryable attempts are exhausted', async () => {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'twilio unavailable',
+      isRetryable: true,
+      retryAfterMs: 1,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'bird unavailable',
+      isRetryable: true,
+      retryAfterMs: 1,
+    }));
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(6);
+    expect(smsService.markFatalFailure).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.BIRD,
+      'bird unavailable',
+    );
+    expect(queueService.enqueueDeadLetter).toHaveBeenCalledWith(MESSAGE_ID);
+    expect(smsService.markSent).not.toHaveBeenCalled();
+  });
+
+  it('marks fatal failure and publishes DLQ after all providers fail with non-retryable errors', async () => {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'twilio invalid payload',
+      isRetryable: false,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'bird invalid payload',
+      isRetryable: false,
+    }));
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(smsService.incrementAttempts).toHaveBeenCalledTimes(2);
+    expect(smsService.markFatalFailure).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.BIRD,
+      'bird invalid payload',
+    );
+    expect(queueService.enqueueDeadLetter).toHaveBeenCalledWith(MESSAGE_ID);
+  });
+
+  it('keeps fatal failure observable when DLQ publication fails', async () => {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'twilio unavailable',
+      isRetryable: false,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'bird unavailable',
+      isRetryable: false,
+    }));
+    queueService.enqueueDeadLetter.mockRejectedValue(new Error('redis unavailable'));
+
+    await expect(dispatcher.dispatch(MESSAGE_ID)).rejects.toThrow('redis unavailable');
+
+    expect(smsService.markFatalFailure).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.BIRD,
+      'bird unavailable',
+    );
+    expect(queueService.enqueueDeadLetter).toHaveBeenCalledWith(MESSAGE_ID);
+  });
+
+  function buildProvider(providerName: SmsProviderName, providerMessageId: string): ISmsProvider {
+    return {
+      providerName,
+      sendSms: jest.fn(async () => ({
+        success: true,
+        providerMessageId,
+        isRetryable: false,
+      })),
+    };
+  }
+
+  function getFirstCallOrder(provider: ISmsProvider): number {
+    const sendSms = provider.sendSms as jest.Mock;
+    const callOrder = sendSms.mock.invocationCallOrder[0];
+
+    if (callOrder === undefined) {
+      throw new Error(`Provider ${provider.providerName} was not called.`);
+    }
+
+    return callOrder;
+  }
 });

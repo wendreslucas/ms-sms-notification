@@ -41,7 +41,7 @@ export class BirdProvider implements ISmsProvider {
           category: 'transactional',
         },
         {
-          idempotencyKey: options.referenceId,
+          idempotencyKey: `sms:${options.referenceId}:${this.providerName}`,
         },
       );
 
@@ -57,6 +57,7 @@ export class BirdProvider implements ISmsProvider {
         success: false,
         error: normalizedError.message,
         isRetryable: normalizedError.isRetryable,
+        retryAfterMs: normalizedError.retryAfterMs,
       };
     }
   }

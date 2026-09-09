@@ -19,11 +19,11 @@ export type BirdClientFactory = (apiKey: string) => Promise<BirdSmsClient>;
 export const BIRD_CLIENT_FACTORY = 'BIRD_CLIENT_FACTORY';
 
 interface BirdSdkModule {
-  BirdClient: new (options: { apiKey: string }) => BirdSmsClient;
+  BirdClient: new (options: { apiKey: string; maxRetries: number }) => BirdSmsClient;
 }
 
 export const defaultBirdClientFactory: BirdClientFactory = (apiKey) => {
   return import('@messagebird/sdk').then((birdSdk: BirdSdkModule) => {
-    return new birdSdk.BirdClient({ apiKey });
+    return new birdSdk.BirdClient({ apiKey, maxRetries: 0 });
   });
 };

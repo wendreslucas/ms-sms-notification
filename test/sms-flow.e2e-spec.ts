@@ -6,28 +6,54 @@ import request from 'supertest';
 import { Queue } from 'bullmq';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { randomUUID } from 'crypto';
 
 import { AppModule } from '../src/app.module';
-import { SMS_QUEUE_NAME } from '../src/modules/queue/queue.constants';
+import {
+  FAILED_SMS_JOB_NAME,
+  SMS_DLQ_QUEUE_NAME,
+  SMS_QUEUE_NAME,
+} from '../src/modules/queue/queue.constants';
 import { ProviderRegistryService } from '../src/modules/providers/provider-registry.service';
 import { ISmsProvider } from '../src/modules/providers/interfaces/sms-provider.interface';
 import { SmsProviderName } from '../src/modules/providers/sms-provider-name.enum';
+import { ProviderRateLimiterService } from '../src/modules/providers/rate-limiting/provider-rate-limiter.service';
 import { SmsMessage } from '../src/modules/sms/entities/sms-message.entity';
 import { SmsStatus } from '../src/modules/sms/entities/sms-status.enum';
+
+jest.setTimeout(20_000);
 
 describe('SMS send flow (e2e)', () => {
   let app: INestApplication;
   let repository: Repository<SmsMessage>;
   let smsQueue: Queue;
+  let smsDlqQueue: Queue;
   let redis: Redis;
-  let provider: ISmsProvider;
+  let twilioProvider: ISmsProvider;
+  let birdProvider: ISmsProvider;
 
   beforeAll(async () => {
-    provider = {
+    process.env.SMS_PROVIDER_PRIORITY = 'twilio,bird';
+    process.env.SMS_MAX_RETRIES = '3';
+    process.env.SMS_RETRY_BASE_DELAY_MS = '1';
+    process.env.TWILIO_RATE_LIMIT_MAX = '100';
+    process.env.TWILIO_RATE_LIMIT_DURATION_MS = '1000';
+    process.env.BIRD_RATE_LIMIT_MAX = '100';
+    process.env.BIRD_RATE_LIMIT_DURATION_MS = '1000';
+
+    twilioProvider = {
       providerName: SmsProviderName.TWILIO,
       sendSms: jest.fn(async () => ({
         success: true,
         providerMessageId: 'SM_E2E',
+        isRetryable: false,
+      })),
+    };
+    birdProvider = {
+      providerName: SmsProviderName.BIRD,
+      sendSms: jest.fn(async () => ({
+        success: true,
+        providerMessageId: 'BIRD_E2E',
         isRetryable: false,
       })),
     };
@@ -36,13 +62,18 @@ describe('SMS send flow (e2e)', () => {
     })
       .overrideProvider(ProviderRegistryService)
       .useValue({
-        getPrimaryProvider: () => provider,
-        getProviders: () => [provider],
+        getPrimaryProvider: () => twilioProvider,
+        getProviders: () => [twilioProvider, birdProvider],
+      })
+      .overrideProvider(ProviderRateLimiterService)
+      .useValue({
+        throttle: jest.fn(async (_providerName: string) => undefined),
       })
       .compile();
 
     repository = moduleRef.get<Repository<SmsMessage>>(getRepositoryToken(SmsMessage));
     smsQueue = moduleRef.get<Queue>(getQueueToken(SMS_QUEUE_NAME));
+    smsDlqQueue = moduleRef.get<Queue>(getQueueToken(SMS_DLQ_QUEUE_NAME));
     redis = new Redis({
       host: process.env.REDIS_HOST ?? 'localhost',
       port: Number(process.env.REDIS_PORT ?? 6380),
@@ -68,7 +99,7 @@ describe('SMS send flow (e2e)', () => {
 
   beforeEach(async () => {
     await cleanupState();
-    jest.clearAllMocks();
+    configureFailoverSuccess();
   });
 
   afterAll(async () => {
@@ -76,7 +107,7 @@ describe('SMS send flow (e2e)', () => {
     await app.close();
   });
 
-  it('accepts a valid request, persists one message and the worker sends it', async () => {
+  it('accepts a valid request, persists one message and the worker fails over to Bird', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/v1/sms/send')
       .set('X-Idempotency-Key', 'e2e-valid-request')
@@ -96,15 +127,16 @@ describe('SMS send flow (e2e)', () => {
     const sentMessage = await waitForMessageStatus(response.body.data.messageId, SmsStatus.SENT);
     const messages = await repository.find();
     expect(messages).toHaveLength(1);
-    expect(sentMessage.selectedProvider).toBe(SmsProviderName.TWILIO);
-    expect(sentMessage.providerMessageId).toBe('SM_E2E');
-    expect(sentMessage.attempts).toBe(1);
+    expect(sentMessage.selectedProvider).toBe(SmsProviderName.BIRD);
+    expect(sentMessage.providerMessageId).toBe('BIRD_E2E');
+    expect(sentMessage.attempts).toBe(4);
     expect(sentMessage.sentAt).toBeInstanceOf(Date);
 
     const ttl = await redis.ttl('sms:idempotency:e2e-valid-request');
     expect(ttl).toBeGreaterThan(0);
 
-    expect(provider.sendSms).toHaveBeenCalledTimes(1);
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
   });
 
   it('returns the same message for duplicate idempotency keys without duplicate records or jobs', async () => {
@@ -129,7 +161,90 @@ describe('SMS send flow (e2e)', () => {
     await expect(repository.count()).resolves.toBe(1);
 
     await waitForMessageStatus(firstResponse.body.data.messageId, SmsStatus.SENT);
-    expect(provider.sendSms).toHaveBeenCalledTimes(1);
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+  });
+
+  it('moves exhausted messages to DLQ and requeues the same message explicitly', async () => {
+    configureAllProvidersFailRetryable();
+
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/sms/send')
+      .set('X-Idempotency-Key', 'e2e-fatal-then-requeue')
+      .send({
+        to: '+14155552671',
+        message: 'Your verification code is 482019',
+      })
+      .expect(202);
+
+    const messageId = response.body.data.messageId;
+    const fatalMessage = await waitForMessageStatus(messageId, SmsStatus.FATAL_FAILURE);
+
+    expect(fatalMessage.attempts).toBe(6);
+    expect(fatalMessage.failedAt).toBeInstanceOf(Date);
+    expect(fatalMessage.lastError).toBe('bird unavailable');
+    expect(fatalMessage.selectedProvider).toBe(SmsProviderName.BIRD);
+
+    const dlqJobs = await smsDlqQueue.getJobs(['waiting', 'delayed', 'active', 'completed']);
+    const dlqJob = dlqJobs.find((job) => job.data.messageId === messageId);
+    expect(dlqJob).toBeDefined();
+    expect(dlqJob?.name).toBe(FAILED_SMS_JOB_NAME);
+    expect(dlqJob?.data).toEqual({ messageId });
+    expect(dlqJob?.data).not.toHaveProperty('recipientPhone');
+    expect(dlqJob?.data).not.toHaveProperty('messageBody');
+    expect(dlqJob?.data).not.toHaveProperty('metadata');
+
+    configureTwilioSuccess();
+
+    await request(app.getHttpServer()).post(`/api/v1/admin/sms/${messageId}/requeue`).expect(202);
+
+    const sentMessage = await waitForMessageStatus(messageId, SmsStatus.SENT);
+    expect(sentMessage.idempotencyKey).toBe('e2e-fatal-then-requeue');
+    expect(sentMessage.attempts).toBe(7);
+    expect(sentMessage.selectedProvider).toBe(SmsProviderName.TWILIO);
+    expect(sentMessage.providerMessageId).toBe('SM_REQUEUED');
+    await expect(repository.count()).resolves.toBe(1);
+  });
+
+  it('rejects requeue for sent messages', async () => {
+    const sentMessage = await createMessage({ status: SmsStatus.SENT });
+
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/sms/${sentMessage.id}/requeue`)
+      .expect(409);
+  });
+
+  it('returns 404 when requeue message does not exist', async () => {
+    await request(app.getHttpServer())
+      .post(`/api/v1/admin/sms/${randomUUID()}/requeue`)
+      .expect(404);
+  });
+
+  it('prevents concurrent requeue from creating duplicate jobs', async () => {
+    const fatalMessage = await createMessage({
+      status: SmsStatus.FATAL_FAILURE,
+      selectedProvider: SmsProviderName.BIRD,
+      lastError: 'bird unavailable',
+      failedAt: new Date(),
+      attempts: 6,
+    });
+
+    await smsQueue.pause();
+
+    try {
+      const responses = await Promise.all([
+        request(app.getHttpServer()).post(`/api/v1/admin/sms/${fatalMessage.id}/requeue`),
+        request(app.getHttpServer()).post(`/api/v1/admin/sms/${fatalMessage.id}/requeue`),
+      ]);
+
+      expect(responses.map((response) => response.status).sort()).toEqual([202, 409]);
+
+      const queuedJobs = await smsQueue.getJobs(['waiting', 'delayed']);
+      const messageJobs = queuedJobs.filter((job) => job.data.messageId === fatalMessage.id);
+      expect(messageJobs).toHaveLength(1);
+    } finally {
+      await smsQueue.resume();
+    }
   });
 
   it('rejects an invalid phone number', async () => {
@@ -154,7 +269,7 @@ describe('SMS send flow (e2e)', () => {
   });
 
   async function waitForMessageStatus(messageId: string, status: SmsStatus): Promise<SmsMessage> {
-    for (let attempt = 0; attempt < 40; attempt += 1) {
+    for (let attempt = 0; attempt < 120; attempt += 1) {
       const message = await repository.findOne({ where: { id: messageId } });
 
       if (message?.status === status) {
@@ -173,6 +288,9 @@ describe('SMS send flow (e2e)', () => {
     await smsQueue.drain(true);
     await smsQueue.clean(0, 1000, 'completed');
     await smsQueue.clean(0, 1000, 'failed');
+    await smsDlqQueue.drain(true);
+    await smsDlqQueue.clean(0, 1000, 'completed');
+    await smsDlqQueue.clean(0, 1000, 'failed');
     await deleteIdempotencyKeys();
     await repository.clear();
   }
@@ -184,9 +302,73 @@ describe('SMS send flow (e2e)', () => {
 
   async function deleteIdempotencyKeys(): Promise<void> {
     const keys = await redis.keys('sms:idempotency*');
+    const rateLimitKeys = await redis.keys('sms:rate-limit*');
+    const keysToDelete = [...keys, ...rateLimitKeys];
 
-    if (keys.length > 0) {
-      await redis.del(...keys);
+    if (keysToDelete.length > 0) {
+      await redis.del(...keysToDelete);
     }
+  }
+
+  function configureFailoverSuccess(): void {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'twilio unavailable',
+      isRetryable: true,
+      retryAfterMs: 1,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'BIRD_E2E',
+      isRetryable: false,
+    }));
+  }
+
+  function configureAllProvidersFailRetryable(): void {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'twilio unavailable',
+      isRetryable: true,
+      retryAfterMs: 1,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: false,
+      error: 'bird unavailable',
+      isRetryable: true,
+      retryAfterMs: 1,
+    }));
+  }
+
+  function configureTwilioSuccess(): void {
+    twilioProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'SM_REQUEUED',
+      isRetryable: false,
+    }));
+    birdProvider.sendSms = jest.fn(async () => ({
+      success: true,
+      providerMessageId: 'BIRD_REQUEUED',
+      isRetryable: false,
+    }));
+  }
+
+  async function createMessage(overrides: Partial<SmsMessage> = {}): Promise<SmsMessage> {
+    const message = repository.create({
+      idempotencyKey: `e2e-${randomUUID()}`,
+      recipientPhone: '+14155552671',
+      messageBody: 'Your verification code is 482019',
+      metadata: null,
+      status: SmsStatus.QUEUED,
+      attempts: 0,
+      selectedProvider: null,
+      providerMessageId: null,
+      lastError: null,
+      sentAt: null,
+      deliveredAt: null,
+      failedAt: null,
+      ...overrides,
+    });
+
+    return repository.save(message);
   }
 });

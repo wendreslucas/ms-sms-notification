@@ -54,6 +54,7 @@ export class TwilioProvider implements ISmsProvider {
         success: false,
         error: normalizedError.message,
         isRetryable: normalizedError.isRetryable,
+        retryAfterMs: normalizedError.retryAfterMs,
       };
     }
   }

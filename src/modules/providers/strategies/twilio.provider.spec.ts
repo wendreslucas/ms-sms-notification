@@ -64,6 +64,25 @@ describe('TwilioProvider', () => {
     expect(result.isRetryable).toBe(true);
   });
 
+  it('returns retryAfterMs when the provider exposes retry-after metadata', async () => {
+    const provider = buildProviderWithError(
+      Object.assign(new Error('rate limited'), {
+        status: 429,
+        headers: {
+          'retry-after': '10',
+        },
+      }),
+    );
+
+    const result = await provider.sendSms({
+      to: '+14155552671',
+      body: 'hello',
+      referenceId: 'message-id',
+    });
+
+    expect(result.retryAfterMs).toBe(10_000);
+  });
+
   it('classifies permanent provider errors as non-retryable', async () => {
     const provider = buildProviderWithError(
       Object.assign(new Error('bad request'), { status: 400 }),

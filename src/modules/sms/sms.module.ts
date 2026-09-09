@@ -5,6 +5,7 @@ import { IdempotencyModule } from '../idempotency/idempotency.module';
 import { QueueModule } from '../queue/queue.module';
 import { ProvidersModule } from '../providers/providers.module';
 import { SmsProcessor } from '../queue/processors/sms.processor';
+import { AdminSmsController } from './controllers/admin-sms.controller';
 import { SmsController } from './controllers/sms.controller';
 import { SmsMessage } from './entities/sms-message.entity';
 import { SmsDispatcherService } from './services/sms-dispatcher.service';
@@ -17,7 +18,7 @@ import { SmsService } from './services/sms.service';
     QueueModule,
     ProvidersModule,
   ],
-  controllers: [SmsController],
+  controllers: [SmsController, AdminSmsController],
   providers: [SmsService, SmsDispatcherService, SmsProcessor],
 })
 export class SmsModule {}

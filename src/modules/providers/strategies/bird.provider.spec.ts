@@ -40,7 +40,7 @@ describe('BirdProvider', () => {
         category: 'transactional',
       },
       {
-        idempotencyKey: 'message-id',
+        idempotencyKey: 'sms:message-id:bird',
       },
     );
     expect(result).toEqual({
@@ -66,6 +66,25 @@ describe('BirdProvider', () => {
 
     expect(result.success).toBe(false);
     expect(result.isRetryable).toBe(true);
+  });
+
+  it('returns retryAfterMs when the provider exposes retry-after metadata', async () => {
+    const provider = buildProviderWithError(
+      Object.assign(new Error('rate limited'), {
+        statusCode: 429,
+        headers: {
+          'retry-after': '10',
+        },
+      }),
+    );
+
+    const result = await provider.sendSms({
+      to: '+14155552671',
+      body: 'hello',
+      referenceId: 'message-id',
+    });
+
+    expect(result.retryAfterMs).toBe(10_000);
   });
 
   it('classifies permanent provider errors as non-retryable', async () => {

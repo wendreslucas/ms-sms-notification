@@ -9,6 +9,7 @@ export interface SendSmsResult {
   providerMessageId?: string;
   error?: string;
   isRetryable: boolean;
+  retryAfterMs?: number;
 }
 
 export interface ISmsProvider {

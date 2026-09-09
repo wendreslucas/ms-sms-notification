@@ -1,9 +1,19 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
 import { Queue } from 'bullmq';
+import { randomUUID } from 'crypto';
 
-import { SEND_SMS_JOB_NAME, SMS_DLQ_QUEUE_NAME, SMS_QUEUE_NAME } from './queue.constants';
-import { SendSmsJobPayload } from './queue.types';
+import {
+  FAILED_SMS_JOB_NAME,
+  SEND_SMS_JOB_NAME,
+  SMS_DLQ_QUEUE_NAME,
+  SMS_QUEUE_NAME,
+} from './queue.constants';
+import { FailedSmsJobPayload, SendSmsJobPayload } from './queue.types';
+
+interface EnqueueSmsOptions {
+  jobId?: string;
+}
 
 @Injectable()
 export class QueueService {
@@ -16,11 +26,27 @@ export class QueueService {
     return [this.smsQueue.name, this.smsDlqQueue.name];
   }
 
-  async enqueueSms(messageId: string): Promise<void> {
+  async enqueueSms(messageId: string, options: EnqueueSmsOptions = {}): Promise<void> {
     const payload: SendSmsJobPayload = { messageId };
 
     await this.smsQueue.add(SEND_SMS_JOB_NAME, payload, {
-      jobId: messageId,
+      jobId: options.jobId ?? messageId,
+      removeOnComplete: false,
+      removeOnFail: false,
+    });
+  }
+
+  async requeueSms(messageId: string): Promise<void> {
+    await this.enqueueSms(messageId, {
+      jobId: `requeue-${messageId}-${Date.now()}-${randomUUID()}`,
+    });
+  }
+
+  async enqueueDeadLetter(messageId: string): Promise<void> {
+    const payload: FailedSmsJobPayload = { messageId };
+
+    await this.smsDlqQueue.add(FAILED_SMS_JOB_NAME, payload, {
+      jobId: `dlq-${messageId}-${Date.now()}-${randomUUID()}`,
       removeOnComplete: false,
       removeOnFail: false,
     });

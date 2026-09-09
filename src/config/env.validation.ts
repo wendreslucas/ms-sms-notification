@@ -14,13 +14,18 @@ export const envValidationSchema = Joi.object({
   REDIS_PORT: Joi.number().port().required(),
 
   SMS_PROVIDER_PRIORITY: Joi.string().min(1).required(),
-  SMS_MAX_RETRIES: Joi.number().integer().min(0).required(),
+  SMS_MAX_RETRIES: Joi.number().integer().min(1).required(),
+  SMS_RETRY_BASE_DELAY_MS: Joi.number().integer().min(1).required(),
   SMS_IDEMPOTENCY_TTL_SECONDS: Joi.number().integer().min(1).required(),
   SMS_MAX_MESSAGE_LENGTH: Joi.number().integer().min(1).required(),
 
+  TWILIO_RATE_LIMIT_MAX: Joi.number().integer().min(1).required(),
+  TWILIO_RATE_LIMIT_DURATION_MS: Joi.number().integer().min(1).required(),
   TWILIO_ACCOUNT_SID: Joi.string().allow('').optional(),
   TWILIO_AUTH_TOKEN: Joi.string().allow('').optional(),
   TWILIO_PHONE_NUMBER: Joi.string().allow('').optional(),
+  BIRD_RATE_LIMIT_MAX: Joi.number().integer().min(1).required(),
+  BIRD_RATE_LIMIT_DURATION_MS: Joi.number().integer().min(1).required(),
   BIRD_API_KEY: Joi.string().allow('').optional(),
   BIRD_ORIGINATOR: Joi.string().allow('').optional(),
 });
