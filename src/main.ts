@@ -16,6 +16,11 @@ async function bootstrap(): Promise<void> {
   const logger = app.get(Logger);
 
   app.useLogger(logger);
+  // The optional demo UI in /web calls the API from another origin. Only that
+  // origin is allowed; the API is not opened to every site.
+  app.enableCors({
+    origin: configService.getOrThrow<string>('app.frontendOrigin'),
+  });
   app.setGlobalPrefix(API_GLOBAL_PREFIX);
   app.enableVersioning({
     type: VersioningType.URI,

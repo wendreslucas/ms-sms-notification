@@ -693,13 +693,15 @@ The default host ports are `5433` for PostgreSQL and `6380` for Redis to avoid c
 The API runs on:
 
 ```text
-http://localhost:3000/api
+http://localhost:3001/api
 ```
+
+It listens on `3001` so that `3000` stays free for the optional demo UI.
 
 ### Webhook Configuration
 
 ```env
-PUBLIC_BASE_URL=http://localhost:3000
+PUBLIC_BASE_URL=http://localhost:3001
 BIRD_WEBHOOK_SECRET=
 BIRD_WEBHOOK_TOLERANCE_SECONDS=300
 WEBHOOK_IDEMPOTENCY_TTL_SECONDS=86400
@@ -718,10 +720,27 @@ Both fail closed: while the corresponding value is empty, that provider's callba
 
 `BIRD_WEBHOOK_TOLERANCE_SECONDS` and `WEBHOOK_IDEMPOTENCY_TTL_SECONDS` have working defaults and only need to be set to override them.
 
+## Optional Demo UI
+
+The `web-app` folder next to this project (`../web-app`) contains an optional Next.js interface for demonstrating the SMS microservice: it sends a message, follows its status as it changes, and exposes requeue for messages in `FATAL_FAILURE`. It is not part of the backend: it lives outside this repository, and nothing in the service depends on it.
+
+With the backend running, in a second terminal:
+
+```bash
+cd ../web-app
+npm install
+cp .env.example .env.local
+npm run dev
+```
+
+The UI runs on `http://localhost:3000` and calls the API on `http://localhost:3001`.
+
+Browsers only allow that cross-origin call because the API enables CORS for a single origin, configured by `FRONTEND_ORIGIN` (default `http://localhost:3000`). No other origin is allowed.
+
 ## Swagger
 
 ```text
-http://localhost:3000/api/docs
+http://localhost:3001/api/docs
 ```
 
 ## Endpoints
