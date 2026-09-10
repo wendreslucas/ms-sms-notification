@@ -18,8 +18,18 @@ import { ProviderRegistryService } from '../src/modules/providers/provider-regis
 import { ISmsProvider } from '../src/modules/providers/interfaces/sms-provider.interface';
 import { SmsProviderName } from '../src/modules/providers/sms-provider-name.enum';
 import { ProviderRateLimiterService } from '../src/modules/providers/rate-limiting/provider-rate-limiter.service';
+import { SmsProcessor } from '../src/modules/queue/processors/sms.processor';
 import { SmsMessage } from '../src/modules/sms/entities/sms-message.entity';
 import { SmsStatus } from '../src/modules/sms/entities/sms-status.enum';
+import {
+  buildRedisConnectionOptions,
+  buildTestQueuePrefix,
+  deleteApplicationKeys,
+  deleteQueuePrefix,
+  isolateBullQueues,
+  resetQueue,
+  waitForNoActiveJobs,
+} from './helpers/bull-test-isolation';
 
 jest.setTimeout(20_000);
 
@@ -29,8 +39,11 @@ describe('SMS send flow (e2e)', () => {
   let smsQueue: Queue;
   let smsDlqQueue: Queue;
   let redis: Redis;
+  let smsProcessor: SmsProcessor;
   let twilioProvider: ISmsProvider;
   let birdProvider: ISmsProvider;
+
+  const queuePrefix = buildTestQueuePrefix('sms-flow');
 
   beforeAll(async () => {
     process.env.SMS_PROVIDER_PRIORITY = 'twilio,bird';
@@ -57,9 +70,12 @@ describe('SMS send flow (e2e)', () => {
         isRetryable: false,
       })),
     };
-    const moduleRef = await Test.createTestingModule({
-      imports: [AppModule],
-    })
+    const moduleRef = await isolateBullQueues(
+      Test.createTestingModule({
+        imports: [AppModule],
+      }),
+      queuePrefix,
+    )
       .overrideProvider(ProviderRegistryService)
       .useValue({
         getPrimaryProvider: () => twilioProvider,
@@ -74,12 +90,12 @@ describe('SMS send flow (e2e)', () => {
     repository = moduleRef.get<Repository<SmsMessage>>(getRepositoryToken(SmsMessage));
     smsQueue = moduleRef.get<Queue>(getQueueToken(SMS_QUEUE_NAME));
     smsDlqQueue = moduleRef.get<Queue>(getQueueToken(SMS_DLQ_QUEUE_NAME));
+    smsProcessor = moduleRef.get(SmsProcessor);
     redis = new Redis({
-      host: process.env.REDIS_HOST ?? 'localhost',
-      port: Number(process.env.REDIS_PORT ?? 6380),
+      ...buildRedisConnectionOptions(),
       maxRetriesPerRequest: 3,
     });
-    await cleanupStateBeforeWorkerStart();
+    await repository.clear();
 
     app = moduleRef.createNestApplication();
     app.setGlobalPrefix('api');
@@ -95,6 +111,14 @@ describe('SMS send flow (e2e)', () => {
     );
 
     await app.init();
+
+    // The worker opens its own blocking connection asynchronously. Enqueuing
+    // before it is listening leaves the job waiting for the next poll cycle.
+    await Promise.all([
+      smsQueue.waitUntilReady(),
+      smsDlqQueue.waitUntilReady(),
+      smsProcessor.worker.waitUntilReady(),
+    ]);
   });
 
   beforeEach(async () => {
@@ -103,8 +127,12 @@ describe('SMS send flow (e2e)', () => {
   });
 
   afterAll(async () => {
-    await redis.quit();
+    // Close the app first so its workers and Redis connections are gone before
+    // the run's queue namespace is removed.
     await app.close();
+    await deleteQueuePrefix(redis, queuePrefix);
+    await deleteApplicationKeys(redis);
+    await redis.quit();
   });
 
   it('accepts a valid request, persists one message and the worker fails over to Bird', async () => {
@@ -285,29 +313,13 @@ describe('SMS send flow (e2e)', () => {
   }
 
   async function cleanupState(): Promise<void> {
-    await smsQueue.drain(true);
-    await smsQueue.clean(0, 1000, 'completed');
-    await smsQueue.clean(0, 1000, 'failed');
-    await smsDlqQueue.drain(true);
-    await smsDlqQueue.clean(0, 1000, 'completed');
-    await smsDlqQueue.clean(0, 1000, 'failed');
-    await deleteIdempotencyKeys();
+    // A dispatch left running by the previous test would keep writing to
+    // sms_messages after the truncate below, so let it finish first.
+    await waitForNoActiveJobs(smsQueue);
+    await resetQueue(smsQueue);
+    await resetQueue(smsDlqQueue);
+    await deleteApplicationKeys(redis);
     await repository.clear();
-  }
-
-  async function cleanupStateBeforeWorkerStart(): Promise<void> {
-    await redis.flushdb();
-    await repository.clear();
-  }
-
-  async function deleteIdempotencyKeys(): Promise<void> {
-    const keys = await redis.keys('sms:idempotency*');
-    const rateLimitKeys = await redis.keys('sms:rate-limit*');
-    const keysToDelete = [...keys, ...rateLimitKeys];
-
-    if (keysToDelete.length > 0) {
-      await redis.del(...keysToDelete);
-    }
   }
 
   function configureFailoverSuccess(): void {

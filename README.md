@@ -439,6 +439,17 @@ npm run test
 npm run test:e2e
 ```
 
+The e2e suites talk to the real PostgreSQL and Redis from `docker-compose.yml`.
+
+Queue names are global to a Redis instance, so every e2e suite that boots `AppModule` gives BullMQ a key prefix unique to that run (`bull-e2e-<suite>-<pid>-<random>`). Without it, any other consumer pointed at the same Redis - a `npm run start:dev` in another terminal, or a Nest app leaked by an interrupted run - registers a worker on the same `sms` queue, steals the jobs the tests enqueue and writes the results into the shared database.
+
+Two related rules keep the suites deterministic:
+
+- never call `FLUSHDB` once the queues and workers are connected; delete only the run's own keys
+- wait for `worker.waitUntilReady()` before enqueuing, and for the active job count to reach zero before truncating `sms_messages`
+
+`--runInBand` is required because the suites share one PostgreSQL database and each truncates `sms_messages`.
+
 Current coverage focuses on:
 
 - `SendSmsDto` validation
