@@ -19,6 +19,10 @@ export const configuration = () => ({
     maxRetries: Number(process.env.SMS_MAX_RETRIES ?? 3),
     retryBaseDelayMs: Number(process.env.SMS_RETRY_BASE_DELAY_MS ?? 2000),
     idempotencyTtlSeconds: Number(process.env.SMS_IDEMPOTENCY_TTL_SECONDS ?? 86400),
+    // Job-level retry, applied by BullMQ when the worker itself fails, and
+    // deliberately separate from the per-provider retry above.
+    jobAttempts: Number(process.env.SMS_JOB_ATTEMPTS ?? 3),
+    jobBackoffDelayMs: Number(process.env.SMS_JOB_BACKOFF_DELAY_MS ?? 1000),
     maxMessageLength: Number(process.env.SMS_MAX_MESSAGE_LENGTH ?? 1600),
   },
   webhooks: {

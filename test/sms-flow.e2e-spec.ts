@@ -3,7 +3,7 @@ import { getQueueToken } from '@nestjs/bullmq';
 import { Test } from '@nestjs/testing';
 import Redis from 'ioredis';
 import request from 'supertest';
-import { Queue } from 'bullmq';
+import { Job, Queue } from 'bullmq';
 import { Repository } from 'typeorm';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { randomUUID } from 'crypto';
@@ -51,6 +51,8 @@ describe('SMS send flow (e2e)', () => {
     process.env.SMS_PROVIDER_PRIORITY = 'twilio,bird';
     process.env.SMS_MAX_RETRIES = '3';
     process.env.SMS_RETRY_BASE_DELAY_MS = '1';
+    process.env.SMS_JOB_ATTEMPTS = '3';
+    process.env.SMS_JOB_BACKOFF_DELAY_MS = '10';
     process.env.TWILIO_RATE_LIMIT_MAX = '100';
     process.env.TWILIO_RATE_LIMIT_DURATION_MS = '1000';
     process.env.BIRD_RATE_LIMIT_MAX = '100';
@@ -282,6 +284,42 @@ describe('SMS send flow (e2e)', () => {
     expect(sentMessage.attempts).toBe(5);
   });
 
+  it('fails over to Bird when Twilio throws a retryable exception', async () => {
+    // The provider raises instead of returning a failure result, which is what
+    // a dropped connection or an SDK-level error looks like.
+    twilioProvider.sendSms = jest.fn(async () => {
+      throw Object.assign(new Error('socket hang up'), { code: 'ECONNRESET' });
+    });
+
+    const response = await request(app.getHttpServer())
+      .post('/api/v1/sms/send')
+      .set('X-Idempotency-Key', 'e2e-twilio-throws')
+      .send({ to: '+14155552671', message: 'Your verification code is 482019' })
+      .expect(202);
+
+    const sentMessage = await waitForMessageStatus(response.body.data.messageId, SmsStatus.SENT);
+    expect(sentMessage.selectedProvider).toBe(SmsProviderName.BIRD);
+    expect(sentMessage.providerMessageId).toBe('BIRD_E2E');
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+  });
+
+  it('lets BullMQ retry a failing job with exponential backoff', async () => {
+    // A job whose processing throws stands in for an infrastructure failure:
+    // the provider never rejects a send this way, so this exercises the queue's
+    // own retry rather than the dispatcher's per-provider retry.
+    const unknownMessageId = randomUUID();
+    await queueService.enqueueSms(unknownMessageId);
+
+    const job = await waitForJobState(unknownMessageId, 'failed');
+
+    expect(job.attemptsMade).toBe(3);
+    expect(job.opts.backoff).toEqual({ type: 'exponential', delay: 10 });
+    // Nothing reached a provider: the failure never got past the message lookup.
+    expect(twilioProvider.sendSms).not.toHaveBeenCalled();
+    expect(birdProvider.sendSms).not.toHaveBeenCalled();
+  });
+
   it('rejects requeue for sent messages', async () => {
     const sentMessage = await createMessage({ status: SmsStatus.SENT });
 
@@ -343,6 +381,22 @@ describe('SMS send flow (e2e)', () => {
       })
       .expect(400);
   });
+
+  async function waitForJobState(jobId: string, state: string): Promise<Job> {
+    for (let attempt = 0; attempt < 120; attempt += 1) {
+      const job = await smsQueue.getJob(jobId);
+
+      if (job && (await job.getState()) === state) {
+        return job;
+      }
+
+      await new Promise((resolve) => {
+        setTimeout(resolve, 50);
+      });
+    }
+
+    throw new Error(`Job ${jobId} did not reach state ${state}.`);
+  }
 
   async function waitForMessageStatus(messageId: string, status: SmsStatus): Promise<SmsMessage> {
     for (let attempt = 0; attempt < 120; attempt += 1) {

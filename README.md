@@ -162,14 +162,25 @@ Unknown or empty provider configuration fails with a clear startup error.
 
 ## Retry Policy
 
-Retries are controlled only by `SmsDispatcherService`. BullMQ jobs are not configured with retry attempts, and provider SDK retries are explicitly disabled where supported.
+There are two independent retry layers, and they never multiply each other.
+
+**Provider retry** lives in `SmsDispatcherService` and covers a provider rejecting a send. Provider SDK retries are explicitly disabled where supported, so this layer is the only one calling a provider more than once.
+
+**Job retry** is BullMQ's own, and covers the job failing for infrastructure reasons: a Redis or PostgreSQL connection dropping mid-dispatch, or a worker dying. A provider that rejects a send is handled inside the dispatcher and never escapes as an error, which is why these attempts cannot multiply provider calls.
+
+```env
+SMS_JOB_ATTEMPTS=3
+SMS_JOB_BACKOFF_DELAY_MS=1000
+```
+
+The job is retried with exponential backoff, delayed by `SMS_JOB_BACKOFF_DELAY_MS * 2^(attempt - 1)`. A redelivered job re-reads the message and skips it unless it is still claimable, so a message that already reached SENT is never sent again by a job retry.
 
 ```env
 SMS_MAX_RETRIES=3
 SMS_RETRY_BASE_DELAY_MS=2000
 ```
 
-`SMS_MAX_RETRIES` means maximum provider calls per provider. With two providers and `SMS_MAX_RETRIES=3`, the worst-case call count is:
+`SMS_MAX_RETRIES` means maximum provider calls per provider, within a single job execution. With two providers and `SMS_MAX_RETRIES=3`, the worst-case call count is:
 
 ```text
 twilio attempt 1

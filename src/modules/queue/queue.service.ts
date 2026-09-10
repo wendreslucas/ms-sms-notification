@@ -1,5 +1,6 @@
 import { InjectQueue } from '@nestjs/bullmq';
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Queue } from 'bullmq';
 import { randomUUID } from 'crypto';
 
@@ -18,9 +19,30 @@ interface EnqueueSmsOptions {
 @Injectable()
 export class QueueService {
   constructor(
+    private readonly configService: ConfigService,
     @InjectQueue(SMS_QUEUE_NAME) private readonly smsQueue: Queue,
     @InjectQueue(SMS_DLQ_QUEUE_NAME) private readonly smsDlqQueue: Queue,
   ) {}
+
+  /**
+   * Retry policy for the job itself, distinct from the per-provider retry the
+   * dispatcher runs.
+   *
+   * A provider that rejects a send is handled inside the dispatcher and never
+   * escapes as an error, so these attempts do not multiply provider calls.
+   * They cover the job failing for infrastructure reasons instead: a Redis or
+   * PostgreSQL connection dropping mid-dispatch, or a worker dying, which
+   * BullMQ retries with exponential backoff.
+   */
+  private buildJobRetryOptions(): { attempts: number; backoff: { type: string; delay: number } } {
+    return {
+      attempts: this.configService.getOrThrow<number>('sms.jobAttempts'),
+      backoff: {
+        type: 'exponential',
+        delay: this.configService.getOrThrow<number>('sms.jobBackoffDelayMs'),
+      },
+    };
+  }
 
   async enqueueSms(messageId: string, options: EnqueueSmsOptions = {}): Promise<void> {
     const payload: SendSmsJobPayload = { messageId };
@@ -29,6 +51,7 @@ export class QueueService {
       jobId: options.jobId ?? messageId,
       removeOnComplete: false,
       removeOnFail: false,
+      ...this.buildJobRetryOptions(),
     });
   }
 

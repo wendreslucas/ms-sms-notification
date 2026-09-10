@@ -19,6 +19,8 @@ export const envValidationSchema = Joi.object({
   SMS_RETRY_BASE_DELAY_MS: Joi.number().integer().min(1).required(),
   SMS_IDEMPOTENCY_TTL_SECONDS: Joi.number().integer().min(1).required(),
   SMS_MAX_MESSAGE_LENGTH: Joi.number().integer().min(1).required(),
+  SMS_JOB_ATTEMPTS: Joi.number().integer().min(1).default(3),
+  SMS_JOB_BACKOFF_DELAY_MS: Joi.number().integer().min(1).default(1000),
 
   TWILIO_RATE_LIMIT_MAX: Joi.number().integer().min(1).required(),
   TWILIO_RATE_LIMIT_DURATION_MS: Joi.number().integer().min(1).required(),
