@@ -1,10 +1,4 @@
-import {
-  BadRequestException,
-  ConflictException,
-  Injectable,
-  NotFoundException,
-  OnModuleInit,
-} from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PinoLogger } from 'nestjs-pino';
@@ -12,7 +6,12 @@ import { QueryFailedError, Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
-import { QueuePublishException } from '../../../common/exceptions/queue-publish.exception';
+import { IdempotencyConflictError } from '../../../common/errors/idempotency-conflict-error';
+import { QueuePublishFailedError } from '../../../common/errors/queue-publish-failed-error';
+import { RequeueConflictError } from '../../../common/errors/requeue-conflict-error';
+import { RequeueNotEligibleError } from '../../../common/errors/requeue-not-eligible-error';
+import { SmsMessageNotFoundError } from '../../../common/errors/sms-message-not-found-error';
+import { SmsMessageTooLongError } from '../../../common/errors/sms-message-too-long-error';
 import { maskPhoneNumber } from '../../../common/utils/mask-phone-number';
 import { IdempotencyLock, IdempotencyService } from '../../idempotency/idempotency.service';
 import { QueueService } from '../../queue/queue.service';
@@ -83,9 +82,7 @@ export class SmsService implements OnModuleInit {
         return this.toResponse(messageCreatedByConcurrentRequest);
       }
 
-      throw new ConflictException(
-        'A request with this idempotency key is already being processed.',
-      );
+      throw new IdempotencyConflictError();
     }
 
     this.logger.info({ event: LogEvent.IDEMPOTENCY_LOCK_ACQUIRED, idempotencyKey });
@@ -112,7 +109,7 @@ export class SmsService implements OnModuleInit {
           },
           'Failed to publish SMS job to BullMQ',
         );
-        throw new QueuePublishException();
+        throw new QueuePublishFailedError();
       }
 
       await this.idempotencyService.storeMessageId(idempotencyKey, message.id);
@@ -245,7 +242,7 @@ export class SmsService implements OnModuleInit {
     const message = await this.findById(messageId);
 
     if (!message) {
-      throw new NotFoundException(`SMS message "${messageId}" was not found.`);
+      throw new SmsMessageNotFoundError();
     }
 
     return {
@@ -357,7 +354,7 @@ export class SmsService implements OnModuleInit {
 
     if (!message) {
       this.logger.warn({ event: LogEvent.REQUEUE_REJECTED, messageId }, 'SMS requeue not found');
-      throw new NotFoundException(`SMS message "${messageId}" was not found.`);
+      throw new SmsMessageNotFoundError();
     }
 
     if (message.status !== SmsStatus.FATAL_FAILURE) {
@@ -369,7 +366,7 @@ export class SmsService implements OnModuleInit {
         },
         'SMS requeue rejected because message is not eligible',
       );
-      throw new ConflictException('Only messages in FATAL_FAILURE can be requeued.');
+      throw new RequeueNotEligibleError();
     }
 
     const transitioned = await this.transitionFatalFailureToQueued(messageId);
@@ -382,7 +379,7 @@ export class SmsService implements OnModuleInit {
         },
         'SMS requeue rejected because another request already changed the message state',
       );
-      throw new ConflictException('SMS message is no longer eligible for requeue.');
+      throw new RequeueConflictError();
     }
 
     try {
@@ -397,7 +394,7 @@ export class SmsService implements OnModuleInit {
         },
         'Failed to publish requeued SMS job',
       );
-      throw new QueuePublishException();
+      throw new QueuePublishFailedError();
     }
 
     this.logger.info(
@@ -424,9 +421,7 @@ export class SmsService implements OnModuleInit {
     const maxMessageLength = this.configService.getOrThrow<number>('sms.maxMessageLength');
 
     if (message.length > maxMessageLength) {
-      throw new BadRequestException(
-        `message must be shorter than or equal to ${maxMessageLength} characters.`,
-      );
+      throw new SmsMessageTooLongError(maxMessageLength);
     }
   }
 

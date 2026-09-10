@@ -1,5 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 
+import { UnknownProviderError } from '../../../common/errors/unknown-provider-error';
 import { RateLimitCounterStore } from './rate-limit-counter-store.interface';
 import { ProviderRateLimiterService } from './provider-rate-limiter.service';
 
@@ -69,9 +70,7 @@ describe('ProviderRateLimiterService', () => {
   it('rejects an unknown provider instead of silently skipping the limit', () => {
     const service = new ProviderRateLimiterService(buildConfigService(), buildCounterStore());
 
-    expect(() => service.getLimitConfig('vonage')).toThrow(
-      'Unknown SMS provider rate-limit configuration: "vonage".',
-    );
+    expect(() => service.getLimitConfig('vonage')).toThrow(UnknownProviderError);
   });
 
   function buildConfigService(): ConfigService {

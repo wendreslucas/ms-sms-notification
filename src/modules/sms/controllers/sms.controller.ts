@@ -11,6 +11,7 @@ import {
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
+  ApiConflictResponse,
   ApiHeader,
   ApiInternalServerErrorResponse,
   ApiNotFoundResponse,
@@ -22,6 +23,7 @@ import {
 
 import { IDEMPOTENCY_KEY_HEADER } from '../../../config/constants';
 import { IdempotencyKey } from '../decorators/idempotency-key.decorator';
+import { ErrorResponseDto } from '../../../common/errors/error-response.dto';
 import { SendSmsDto } from '../dto/send-sms.dto';
 import { SendSmsResponseDto } from '../dto/send-sms-response.dto';
 import { SmsStatusResponseDto } from '../dto/sms-status-response.dto';
@@ -54,9 +56,15 @@ export class SmsController {
     type: SendSmsResponseDto,
   })
   @ApiBadRequestResponse({
-    description: 'Invalid header or body payload.',
+    description:
+      'Invalid header or body. X-Idempotency-Key and message-length errors use the error envelope with a code; field validation errors keep the standard validation format, with message as a list.',
+  })
+  @ApiConflictResponse({
+    type: ErrorResponseDto,
+    description: 'Another request with the same X-Idempotency-Key is still being processed.',
   })
   @ApiInternalServerErrorResponse({
+    type: ErrorResponseDto,
     description: 'Unexpected persistence or queue publication failure.',
   })
   async send(
@@ -82,7 +90,7 @@ export class SmsController {
     type: SmsStatusResponseDto,
   })
   @ApiBadRequestResponse({ description: 'messageId is not a valid UUID.' })
-  @ApiNotFoundResponse({ description: 'SMS message was not found.' })
+  @ApiNotFoundResponse({ type: ErrorResponseDto, description: 'SMS message was not found.' })
   async getStatus(
     @Param('messageId', new ParseUUIDPipe({ version: '4' })) messageId: string,
   ): Promise<SmsStatusResponseDto> {

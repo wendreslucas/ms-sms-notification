@@ -9,6 +9,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { ErrorResponseDto } from '../../../common/errors/error-response.dto';
 import { RequeueSmsResponseDto } from '../dto/requeue-sms-response.dto';
 import { SmsService } from '../services/sms.service';
 
@@ -36,13 +37,13 @@ export class AdminSmsController {
     description: 'SMS message was requeued.',
     type: RequeueSmsResponseDto,
   })
-  @ApiNotFoundResponse({
-    description: 'SMS message was not found.',
-  })
+  @ApiNotFoundResponse({ type: ErrorResponseDto, description: 'SMS message was not found.' })
   @ApiConflictResponse({
+    type: ErrorResponseDto,
     description: 'SMS message is not in FATAL_FAILURE or was requeued concurrently.',
   })
   @ApiInternalServerErrorResponse({
+    type: ErrorResponseDto,
     description: 'Unexpected persistence or queue publication failure.',
   })
   async requeue(

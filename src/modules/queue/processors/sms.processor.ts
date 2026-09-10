@@ -1,6 +1,8 @@
 import { Processor, WorkerHost } from '@nestjs/bullmq';
 import { Job } from 'bullmq';
 
+import { InvalidJobPayloadError } from '../../../common/errors/invalid-job-payload-error';
+import { UnsupportedJobError } from '../../../common/errors/unsupported-job-error';
 import { SEND_SMS_JOB_NAME, SMS_QUEUE_NAME } from '../queue.constants';
 import { SendSmsJobPayload } from '../queue.types';
 import { SmsDispatcherService } from '../../sms/services/sms-dispatcher.service';
@@ -15,11 +17,11 @@ export class SmsProcessor extends WorkerHost {
 
   async process(job: Job<SendSmsJobPayload>): Promise<void> {
     if (job.name !== SEND_SMS_JOB_NAME) {
-      throw new Error(`Unsupported SMS job name: ${job.name}`);
+      throw new UnsupportedJobError(job.name);
     }
 
     if (!UUID_PATTERN.test(job.data.messageId)) {
-      throw new Error('SMS job payload must contain a valid messageId UUID.');
+      throw new InvalidJobPayloadError();
     }
 
     await this.smsDispatcherService.dispatch(job.data.messageId);

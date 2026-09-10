@@ -1,6 +1,10 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { NoProviderConfiguredError } from '../../common/errors/no-provider-configured-error';
+import { ProviderNotRegisteredError } from '../../common/errors/provider-not-registered-error';
+import { ProviderPriorityEmptyError } from '../../common/errors/provider-priority-empty-error';
+import { UnknownProviderError } from '../../common/errors/unknown-provider-error';
 import { ISmsProvider } from './interfaces/sms-provider.interface';
 import { SmsProviderName } from './sms-provider-name.enum';
 import { BirdProvider } from './strategies/bird.provider';
@@ -34,7 +38,7 @@ export class ProviderRegistryService implements OnModuleInit {
       .filter((providerName) => providerName.length > 0);
 
     if (providerNames.length === 0) {
-      throw new Error('SMS_PROVIDER_PRIORITY must contain at least one provider.');
+      throw new ProviderPriorityEmptyError();
     }
 
     return providerNames.map((providerName) => this.toProviderName(providerName));
@@ -48,7 +52,7 @@ export class ProviderRegistryService implements OnModuleInit {
     const provider = this.orderedProviders[0];
 
     if (!provider) {
-      throw new Error('No SMS provider is configured.');
+      throw new NoProviderConfiguredError();
     }
 
     return provider;
@@ -58,7 +62,7 @@ export class ProviderRegistryService implements OnModuleInit {
     const provider = this.providers.get(providerName);
 
     if (!provider) {
-      throw new Error(`SMS provider "${providerName}" is not registered.`);
+      throw new ProviderNotRegisteredError(providerName);
     }
 
     return provider;
@@ -77,6 +81,6 @@ export class ProviderRegistryService implements OnModuleInit {
       return SmsProviderName.BIRD;
     }
 
-    throw new Error(`Unknown SMS provider configured: "${providerName}".`);
+    throw new UnknownProviderError(providerName);
   }
 }

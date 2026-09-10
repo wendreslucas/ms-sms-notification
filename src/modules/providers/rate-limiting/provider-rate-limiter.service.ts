@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { UnknownProviderError } from '../../../common/errors/unknown-provider-error';
 import { SmsProviderName } from '../sms-provider-name.enum';
 import {
   RATE_LIMIT_COUNTER_STORE,
@@ -56,7 +57,7 @@ export class ProviderRateLimiterService {
       return SmsProviderName.BIRD;
     }
 
-    throw new Error(`Unknown SMS provider rate-limit configuration: "${providerName}".`);
+    throw new UnknownProviderError(providerName);
   }
 
   private async sleep(milliseconds: number): Promise<void> {

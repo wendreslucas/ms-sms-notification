@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
+import { SmsMessageNotFoundError } from '../../../common/errors/sms-message-not-found-error';
 import { maskPhoneNumber } from '../../../common/utils/mask-phone-number';
 import { calculateExponentialBackoff } from '../../../common/utils/retry.util';
 import { ISmsProvider, SendSmsResult } from '../../providers/interfaces/sms-provider.interface';
@@ -50,7 +51,7 @@ export class SmsDispatcherService implements OnModuleInit {
 
     if (!message) {
       this.logger.error({ messageId }, 'SMS message referenced by job was not found');
-      throw new Error(`SMS message "${messageId}" was not found.`);
+      throw new SmsMessageNotFoundError();
     }
 
     if (this.shouldSkip(message)) {

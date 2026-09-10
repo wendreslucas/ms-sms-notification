@@ -329,9 +329,16 @@ describe('SMS send flow (e2e)', () => {
   });
 
   it('returns 404 when requeue message does not exist', async () => {
-    await request(app.getHttpServer())
+    const response = await request(app.getHttpServer())
       .post(`/api/v1/admin/sms/${randomUUID()}/requeue`)
       .expect(404);
+
+    expect(response.body).toEqual({
+      statusCode: 404,
+      error: 'Not Found',
+      code: 'SMS_MESSAGE_NOT_FOUND',
+      message: 'SMS message was not found.',
+    });
   });
 
   it('prevents concurrent requeue from creating duplicate jobs', async () => {
@@ -485,13 +492,15 @@ describe('SMS send flow (e2e)', () => {
   });
 
   it('rejects a missing idempotency key header', async () => {
-    await request(app.getHttpServer())
+    const response = await request(app.getHttpServer())
       .post('/api/v1/sms/send')
       .send({
         to: '+14155552671',
         message: 'Your verification code is 482019',
       })
       .expect(400);
+
+    expect(response.body.code).toBe('SMS_IDEMPOTENCY_KEY_REQUIRED');
   });
 
   async function waitForJobState(jobId: string, state: string): Promise<Job> {

@@ -157,12 +157,14 @@ describe('Delivery webhooks (e2e)', () => {
         providerMessageId: 'SM123',
       });
 
-      await request(app.getHttpServer())
+      const response = await request(app.getHttpServer())
         .post(TWILIO_WEBHOOK_PATH)
         .type('form')
         .set('X-Twilio-Signature', 'not-the-right-signature')
         .send({ MessageSid: 'SM123', MessageStatus: 'delivered' })
         .expect(403);
+
+      expect(response.body.code).toBe('WEBHOOK_TWILIO_SIGNATURE_INVALID');
 
       expect((await findMessage(message.id)).status).toBe(SmsStatus.SENT);
     });

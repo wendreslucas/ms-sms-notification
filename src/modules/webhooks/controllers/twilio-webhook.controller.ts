@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 
+import { ErrorResponseDto } from '../../../common/errors/error-response.dto';
 import { API_DEFAULT_VERSION } from '../../../config/constants';
 import { TwilioWebhookService } from '../services/twilio-webhook.service';
 import {
@@ -41,8 +42,14 @@ export class TwilioWebhookController {
     description:
       'Callback accepted. Also returned for unknown provider message ids and for statuses that carry no new delivery information, so the provider does not retry.',
   })
-  @ApiBadRequestResponse({ description: 'Callback is missing MessageSid or MessageStatus.' })
-  @ApiForbiddenResponse({ description: 'Missing or invalid X-Twilio-Signature.' })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description: 'Callback is missing MessageSid or MessageStatus.',
+  })
+  @ApiForbiddenResponse({
+    type: ErrorResponseDto,
+    description: 'Missing or invalid X-Twilio-Signature.',
+  })
   async handleTwilio(
     @Headers(TWILIO_SIGNATURE_HEADER) signature: string | undefined,
     @Req() request: Request,

@@ -1,7 +1,8 @@
-import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
+import { InvalidTwilioPayloadError } from '../../../common/errors/invalid-twilio-payload-error';
+import { InvalidTwilioSignatureError } from '../../../common/errors/invalid-twilio-signature-error';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
 import { SmsStatus } from '../../sms/entities/sms-status.enum';
 import { TwilioSignatureVerifier } from '../signature/twilio-signature.verifier';
@@ -46,7 +47,7 @@ describe('TwilioWebhookService', () => {
     it('rejects an invalid signature without touching the message', async () => {
       await expect(
         service.handle('tampered', { MessageSid: 'SM123', MessageStatus: 'delivered' }),
-      ).rejects.toBeInstanceOf(ForbiddenException);
+      ).rejects.toBeInstanceOf(InvalidTwilioSignatureError);
 
       expect(deliveryStatusService.apply).not.toHaveBeenCalled();
       expect(logger.warn).toHaveBeenCalledWith(
@@ -58,7 +59,7 @@ describe('TwilioWebhookService', () => {
     it('rejects a callback that carries no signature header', async () => {
       await expect(
         service.handle(undefined, { MessageSid: 'SM123', MessageStatus: 'delivered' }),
-      ).rejects.toBeInstanceOf(ForbiddenException);
+      ).rejects.toBeInstanceOf(InvalidTwilioSignatureError);
 
       expect(deliveryStatusService.apply).not.toHaveBeenCalled();
     });
@@ -85,7 +86,7 @@ describe('TwilioWebhookService', () => {
       ['an empty body', {}],
     ])('rejects %s with 400', async (_label, body) => {
       await expect(service.handle(VALID_SIGNATURE, body)).rejects.toBeInstanceOf(
-        BadRequestException,
+        InvalidTwilioPayloadError,
       );
 
       expect(deliveryStatusService.apply).not.toHaveBeenCalled();

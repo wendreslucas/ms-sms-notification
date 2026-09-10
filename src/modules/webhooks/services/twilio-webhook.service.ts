@@ -1,7 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
+import { InvalidTwilioPayloadError } from '../../../common/errors/invalid-twilio-payload-error';
+import { InvalidTwilioSignatureError } from '../../../common/errors/invalid-twilio-signature-error';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
 import { SmsStatus } from '../../sms/entities/sms-status.enum';
 import { TwilioSignatureVerifier } from '../signature/twilio-signature.verifier';
@@ -43,7 +45,7 @@ export class TwilioWebhookService implements OnModuleInit {
         'Rejected Twilio callback with an invalid signature',
       );
 
-      throw new ForbiddenException('Invalid Twilio webhook signature.');
+      throw new InvalidTwilioSignatureError();
     }
 
     const callback = extractTwilioStatusCallback(body);
@@ -57,7 +59,7 @@ export class TwilioWebhookService implements OnModuleInit {
         'Rejected Twilio callback without MessageSid or MessageStatus',
       );
 
-      throw new BadRequestException('Twilio callback is missing MessageSid or MessageStatus.');
+      throw new InvalidTwilioPayloadError();
     }
 
     this.logger.info(

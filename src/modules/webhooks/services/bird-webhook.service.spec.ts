@@ -1,7 +1,8 @@
-import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
+import { InvalidBirdPayloadError } from '../../../common/errors/invalid-bird-payload-error';
+import { InvalidBirdSignatureError } from '../../../common/errors/invalid-bird-signature-error';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
 import { SmsStatus } from '../../sms/entities/sms-status.enum';
 import {
@@ -77,7 +78,7 @@ describe('BirdWebhookService', () => {
     ])('rejects a delivery that failed verification with %s', async (reason) => {
       signatureVerifier.verify.mockResolvedValue({ ok: false, reason } as BirdVerificationResult);
 
-      await expect(service.handle(RAW_BODY, {})).rejects.toBeInstanceOf(ForbiddenException);
+      await expect(service.handle(RAW_BODY, {})).rejects.toBeInstanceOf(InvalidBirdSignatureError);
 
       expect(deliveryStatusService.apply).not.toHaveBeenCalled();
       expect(webhookIdempotencyService.claimBirdWebhook).not.toHaveBeenCalled();
@@ -133,7 +134,7 @@ describe('BirdWebhookService', () => {
     ])('rejects %s with 400', async (_label, event) => {
       verificationSucceedsWith(event);
 
-      await expect(service.handle(RAW_BODY, {})).rejects.toBeInstanceOf(BadRequestException);
+      await expect(service.handle(RAW_BODY, {})).rejects.toBeInstanceOf(InvalidBirdPayloadError);
 
       expect(webhookIdempotencyService.claimBirdWebhook).not.toHaveBeenCalled();
     });

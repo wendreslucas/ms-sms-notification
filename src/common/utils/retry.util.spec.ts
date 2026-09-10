@@ -1,3 +1,4 @@
+import { InvalidRetryConfigurationError } from '../errors/invalid-retry-configuration-error';
 import { calculateExponentialBackoff } from './retry.util';
 
 describe('calculateExponentialBackoff', () => {
@@ -8,11 +9,7 @@ describe('calculateExponentialBackoff', () => {
   });
 
   it('rejects invalid inputs', () => {
-    expect(() => calculateExponentialBackoff(0, 2000)).toThrow(
-      'attempt must be greater than or equal to 1.',
-    );
-    expect(() => calculateExponentialBackoff(1, 0)).toThrow(
-      'baseDelayMs must be greater than or equal to 1.',
-    );
+    expect(() => calculateExponentialBackoff(0, 2000)).toThrow(InvalidRetryConfigurationError);
+    expect(() => calculateExponentialBackoff(1, 0)).toThrow(InvalidRetryConfigurationError);
   });
 });

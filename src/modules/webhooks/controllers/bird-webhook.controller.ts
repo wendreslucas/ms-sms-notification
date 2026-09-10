@@ -9,6 +9,7 @@ import {
 } from '@nestjs/swagger';
 import type { Request } from 'express';
 
+import { ErrorResponseDto } from '../../../common/errors/error-response.dto';
 import { API_DEFAULT_VERSION } from '../../../config/constants';
 import { BirdWebhookService } from '../services/bird-webhook.service';
 import {
@@ -55,8 +56,12 @@ export class BirdWebhookController {
     description:
       'Event accepted. Also returned for duplicates, unknown sms ids and event types that carry no new delivery information, so Bird does not retry.',
   })
-  @ApiBadRequestResponse({ description: 'Event is missing its type or sms id.' })
+  @ApiBadRequestResponse({
+    type: ErrorResponseDto,
+    description: 'Event is missing its type or sms id.',
+  })
   @ApiForbiddenResponse({
+    type: ErrorResponseDto,
     description: 'Missing, malformed, replayed or invalid Standard Webhooks signature.',
   })
   async handleBird(@Req() request: RawBodyRequest<Request>): Promise<void> {

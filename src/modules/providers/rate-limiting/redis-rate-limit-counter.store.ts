@@ -2,6 +2,7 @@ import { Injectable, OnModuleDestroy } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import Redis from 'ioredis';
 
+import { RateLimitStoreInvalidResponseError } from '../../../common/errors/rate-limit-store-invalid-response-error';
 import {
   RateLimitCounterResult,
   RateLimitCounterStore,
@@ -32,7 +33,7 @@ export class RedisRateLimitCounterStore implements RateLimitCounterStore, OnModu
     const result = await this.redis.eval(INCREMENT_WITH_TTL_SCRIPT, 1, key, durationMs.toString());
 
     if (!Array.isArray(result) || result.length < 2) {
-      throw new Error('Redis rate-limit script returned an unexpected response.');
+      throw new RateLimitStoreInvalidResponseError();
     }
 
     return {
@@ -54,6 +55,6 @@ export class RedisRateLimitCounterStore implements RateLimitCounterStore, OnModu
       return Number(value);
     }
 
-    throw new Error('Redis rate-limit script returned a non-numeric value.');
+    throw new RateLimitStoreInvalidResponseError();
   }
 }

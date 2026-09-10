@@ -770,6 +770,25 @@ The two webhook routes are provider callbacks, not endpoints for API consumers. 
 
 It returns tracking data only. The recipient number, the message body, the metadata and the idempotency key are never exposed. A malformed id returns `400 Bad Request` without touching the database, and an id that matches no message returns `404 Not Found`.
 
+## Error Responses
+
+Every error the service raises on purpose is a class in `src/common/errors`, one per file, extending `AppError`. Codes, messages and HTTP statuses live in a single catalog, `error-catalog.ts`; no error message is written inline anywhere else.
+
+`AppErrorFilter` turns them into one response shape:
+
+```json
+{
+  "statusCode": 404,
+  "error": "Not Found",
+  "code": "SMS_MESSAGE_NOT_FOUND",
+  "message": "SMS message was not found."
+}
+```
+
+`code` is stable and meant for branching; `message` is for people. Values that change per occurrence, such as the configured maximum message length, travel in `details` instead of being interpolated into the message.
+
+Field validation errors raised by `ValidationPipe`, such as an invalid phone number, keep the standard validation format, with `message` as a list of field errors.
+
 ## Tests
 
 ```bash

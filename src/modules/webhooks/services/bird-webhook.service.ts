@@ -1,7 +1,9 @@
-import { BadRequestException, ForbiddenException, Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { PinoLogger } from 'nestjs-pino';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
+import { InvalidBirdPayloadError } from '../../../common/errors/invalid-bird-payload-error';
+import { InvalidBirdSignatureError } from '../../../common/errors/invalid-bird-signature-error';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
 import { SmsStatus } from '../../sms/entities/sms-status.enum';
 import { BirdSignatureVerifier } from '../signature/bird-signature.verifier';
@@ -47,7 +49,7 @@ export class BirdWebhookService implements OnModuleInit {
         'Rejected Bird webhook that failed verification',
       );
 
-      throw new ForbiddenException('Invalid Bird webhook signature.');
+      throw new InvalidBirdSignatureError();
     }
 
     const event = extractBirdDeliveryEvent(verification.event);
@@ -62,7 +64,7 @@ export class BirdWebhookService implements OnModuleInit {
         'Rejected Bird webhook without an event type or sms id',
       );
 
-      throw new BadRequestException('Bird webhook is missing the event type or sms id.');
+      throw new InvalidBirdPayloadError();
     }
 
     this.logger.info(

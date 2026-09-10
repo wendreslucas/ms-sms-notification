@@ -2,6 +2,7 @@ import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
 
+import { SmsMessageNotFoundError } from '../../../common/errors/sms-message-not-found-error';
 import { ISmsProvider } from '../../providers/interfaces/sms-provider.interface';
 import { ProviderRegistryService } from '../../providers/provider-registry.service';
 import { ProviderRateLimiterService } from '../../providers/rate-limiting/provider-rate-limiter.service';
@@ -164,9 +165,7 @@ describe('SmsDispatcherService', () => {
   it('throws and does not call provider when the message does not exist', async () => {
     smsService.findById.mockResolvedValue(null);
 
-    await expect(dispatcher.dispatch('missing-id')).rejects.toThrow(
-      'SMS message "missing-id" was not found.',
-    );
+    await expect(dispatcher.dispatch('missing-id')).rejects.toBeInstanceOf(SmsMessageNotFoundError);
 
     expect(twilioProvider.sendSms).not.toHaveBeenCalled();
   });

@@ -1,5 +1,7 @@
 import { ConfigService } from '@nestjs/config';
 
+import { ProviderPriorityEmptyError } from '../../common/errors/provider-priority-empty-error';
+import { UnknownProviderError } from '../../common/errors/unknown-provider-error';
 import { ISmsProvider } from './interfaces/sms-provider.interface';
 import { ProviderRegistryService } from './provider-registry.service';
 import { SmsProviderName } from './sms-provider-name.enum';
@@ -51,14 +53,12 @@ describe('ProviderRegistryService', () => {
   it('rejects unknown providers', () => {
     const registry = buildRegistry('foo,twilio');
 
-    expect(() => registry.onModuleInit()).toThrow('Unknown SMS provider configured: "foo".');
+    expect(() => registry.onModuleInit()).toThrow(UnknownProviderError);
   });
 
   it('rejects empty configuration', () => {
     const registry = buildRegistry(' , ');
 
-    expect(() => registry.onModuleInit()).toThrow(
-      'SMS_PROVIDER_PRIORITY must contain at least one provider.',
-    );
+    expect(() => registry.onModuleInit()).toThrow(ProviderPriorityEmptyError);
   });
 });

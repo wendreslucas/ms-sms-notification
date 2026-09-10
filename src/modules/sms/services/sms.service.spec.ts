@@ -1,11 +1,13 @@
-import { ConflictException, NotFoundException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { PinoLogger } from 'nestjs-pino';
 import { QueryFailedError } from 'typeorm';
 
-import { QueuePublishException } from '../../../common/exceptions/queue-publish.exception';
+import { QueuePublishFailedError } from '../../../common/errors/queue-publish-failed-error';
+import { RequeueConflictError } from '../../../common/errors/requeue-conflict-error';
+import { RequeueNotEligibleError } from '../../../common/errors/requeue-not-eligible-error';
+import { SmsMessageNotFoundError } from '../../../common/errors/sms-message-not-found-error';
 import { IdempotencyService } from '../../idempotency/idempotency.service';
 import { QueueService } from '../../queue/queue.service';
 import { SendSmsDto } from '../dto/send-sms.dto';
@@ -180,7 +182,7 @@ describe('SmsService', () => {
     queueService.enqueueSms.mockRejectedValue(new Error('redis unavailable'));
 
     await expect(service.sendSmsRequest('idem-key', dto)).rejects.toBeInstanceOf(
-      QueuePublishException,
+      QueuePublishFailedError,
     );
 
     expect(repository.update).toHaveBeenCalledWith(
@@ -309,13 +311,13 @@ describe('SmsService', () => {
 
     await expect(
       service.getMessageStatus('c8d488e9-f308-43e8-8df0cb5134ef'),
-    ).rejects.toBeInstanceOf(NotFoundException);
+    ).rejects.toBeInstanceOf(SmsMessageNotFoundError);
   });
 
   it('rejects requeue when the message does not exist', async () => {
     repository.findOne.mockResolvedValue(null);
 
-    await expect(service.requeue('missing-id')).rejects.toBeInstanceOf(NotFoundException);
+    await expect(service.requeue('missing-id')).rejects.toBeInstanceOf(SmsMessageNotFoundError);
 
     expect(queueService.requeueSms).not.toHaveBeenCalled();
   });
@@ -324,7 +326,7 @@ describe('SmsService', () => {
     repository.findOne.mockResolvedValue(buildMessage({ status: SmsStatus.SENT }));
 
     await expect(service.requeue('c8d488e9-f308-43e8-8df0cb5134ef')).rejects.toBeInstanceOf(
-      ConflictException,
+      RequeueNotEligibleError,
     );
 
     expect(queueService.requeueSms).not.toHaveBeenCalled();
@@ -335,7 +337,7 @@ describe('SmsService', () => {
     repository.update.mockResolvedValue({ affected: 0 });
 
     await expect(service.requeue('c8d488e9-f308-43e8-8df0cb5134ef')).rejects.toBeInstanceOf(
-      ConflictException,
+      RequeueConflictError,
     );
 
     expect(queueService.requeueSms).not.toHaveBeenCalled();
@@ -352,7 +354,7 @@ describe('SmsService', () => {
     repository.update.mockResolvedValue({ affected: 1 });
     queueService.requeueSms.mockRejectedValue(new Error('redis unavailable'));
 
-    await expect(service.requeue(fatalMessage.id)).rejects.toBeInstanceOf(QueuePublishException);
+    await expect(service.requeue(fatalMessage.id)).rejects.toBeInstanceOf(QueuePublishFailedError);
 
     expect(repository.update).toHaveBeenNthCalledWith(
       2,
