@@ -334,12 +334,12 @@ Each provider reads its limits from `providers.<providerName>` in `configuration
 
 ## SDK Retry Policy
 
-The service avoids multiple retry layers:
+Provider SDK retries are disabled so the dispatcher remains the only layer that repeats external provider calls:
 
-- Dispatcher owns retries, backoff, and failover.
-- BullMQ job retries are not configured.
 - Twilio SDK client is created with `autoRetry: false` and `maxRetries: 0`.
 - Bird SDK client is created with `maxRetries: 0`.
+
+BullMQ job retries are configured separately for infrastructure failures and are described in [Retry Policy](#retry-policy). They are not provider retries: provider rejections are handled inside `SmsDispatcherService` and do not escape as job failures.
 
 Bird sends a deterministic provider idempotency key per message/provider:
 
