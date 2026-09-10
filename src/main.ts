@@ -5,13 +5,16 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { Logger } from 'nestjs-pino';
 
 import { AppModule } from './app.module';
+import { API_GLOBAL_PREFIX } from './config/constants';
 
 async function bootstrap(): Promise<void> {
-  const app = await NestFactory.create(AppModule, { bufferLogs: true });
+  // rawBody exposes the untouched request bytes on `req.rawBody`. Bird signs the
+  // raw body, so verifying a re-serialized payload would never match.
+  const app = await NestFactory.create(AppModule, { bufferLogs: true, rawBody: true });
   const configService = app.get(ConfigService);
 
   app.useLogger(app.get(Logger));
-  app.setGlobalPrefix('api');
+  app.setGlobalPrefix(API_GLOBAL_PREFIX);
   app.enableVersioning({
     type: VersioningType.URI,
   });
@@ -28,11 +31,13 @@ async function bootstrap(): Promise<void> {
     .setDescription('Foundation API for a standalone SMS notification microservice.')
     .setVersion('0.1.0')
     .addTag('sms')
+    .addTag('admin-sms')
+    .addTag('webhooks')
     .addTag('health')
     .build();
 
   const document = SwaggerModule.createDocument(app, swaggerConfig);
-  SwaggerModule.setup('api/docs', app, document);
+  SwaggerModule.setup(`${API_GLOBAL_PREFIX}/docs`, app, document);
 
   const port = configService.getOrThrow<number>('app.port');
   await app.listen(port);

@@ -11,6 +11,7 @@ import { SmsStatus } from './sms-status.enum';
 
 @Entity({ name: 'sms_messages' })
 @Index('UQ_sms_messages_idempotency_key', ['idempotencyKey'], { unique: true })
+@Index('IDX_sms_messages_provider_message_id', ['selectedProvider', 'providerMessageId'])
 export class SmsMessage {
   @PrimaryGeneratedColumn('uuid')
   id: string;

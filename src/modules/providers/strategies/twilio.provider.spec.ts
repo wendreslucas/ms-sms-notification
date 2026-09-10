@@ -4,7 +4,7 @@ import { SmsProviderName } from '../sms-provider-name.enum';
 import { TwilioClientFactory, TwilioMessageClient } from './twilio-provider.tokens';
 import { TwilioProvider } from './twilio.provider';
 
-function buildConfig(values: Record<string, string>): ConfigService {
+function buildConfig(values: Record<string, unknown>): ConfigService {
   return {
     get: (key: string) => values[key],
   } as ConfigService;
@@ -23,6 +23,7 @@ describe('TwilioProvider', () => {
         TWILIO_ACCOUNT_SID: 'AC123',
         TWILIO_AUTH_TOKEN: 'token',
         TWILIO_PHONE_NUMBER: '+14155550100',
+        'webhooks.publicBaseUrl': 'https://sms.example.com',
       }),
       factory,
     );
@@ -38,6 +39,7 @@ describe('TwilioProvider', () => {
       to: '+14155552671',
       from: '+14155550100',
       body: 'hello',
+      statusCallback: 'https://sms.example.com/api/v1/webhooks/twilio',
     });
     expect(result).toEqual({
       success: true,
@@ -81,6 +83,31 @@ describe('TwilioProvider', () => {
     });
 
     expect(result.retryAfterMs).toBe(10_000);
+  });
+
+  it('omits statusCallback when no public base URL is configured', async () => {
+    const create = jest.fn(async () => ({ sid: 'SM123' }));
+    const factory: TwilioClientFactory = jest.fn(
+      (_accountSid: string, _authToken: string): TwilioMessageClient => ({
+        messages: { create },
+      }),
+    );
+    const provider = new TwilioProvider(
+      buildConfig({
+        TWILIO_ACCOUNT_SID: 'AC123',
+        TWILIO_AUTH_TOKEN: 'token',
+        TWILIO_PHONE_NUMBER: '+14155550100',
+      }),
+      factory,
+    );
+
+    await provider.sendSms({ to: '+14155552671', body: 'hello', referenceId: 'message-id' });
+
+    expect(create).toHaveBeenCalledWith({
+      to: '+14155552671',
+      from: '+14155550100',
+      body: 'hello',
+    });
   });
 
   it('classifies permanent provider errors as non-retryable', async () => {

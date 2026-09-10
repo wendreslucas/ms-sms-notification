@@ -97,6 +97,22 @@ no automatic attempts remain
 
 Only `FATAL_FAILURE` is eligible for explicit administrative requeue.
 
+`FATAL_FAILURE` is reserved for that internal send flow and is never produced by a delivery webhook.
+
+## Delivery Status Semantics
+
+The statuses a provider callback can produce:
+
+```text
+SENT         provider accepted and forwarded the message
+DELIVERED    provider/carrier confirmed delivery to the recipient
+UNDELIVERED  a delivery receipt reported non-delivery
+REJECTED     the message was refused before or during delivery processing
+FAILED       terminal delivery callback that fits no other status better
+```
+
+`FAILED` is also still used by the internal flow for non-definitive operational failures, such as a queue publication failure after persistence.
+
 ## Providers
 
 Providers implement:
@@ -411,6 +427,244 @@ The current strategy is simple and explicit:
 
 For strict zero-loss guarantees in production, the recommended evolution is Transactional Outbox with a reliable relay process.
 
+## Delivery Webhooks
+
+Both providers report delivery outcomes through signed callbacks. Every callback follows the same pipeline:
+
+```text
+Provider
+↓
+signature verification
+↓
+status normalization
+↓
+PostgreSQL
+```
+
+Controllers stay thin. Signature verification, deduplication, status mapping and persistence each live in their own unit:
+
+```text
+TwilioWebhookController → TwilioWebhookService ┐
+                                                ├→ DeliveryStatusService → SmsService → PostgreSQL
+BirdWebhookController   → BirdWebhookService   ┘
+```
+
+The update is a single small conditional `UPDATE`, so the request is answered synchronously. No extra queue was introduced for webhooks.
+
+### Responses
+
+```text
+204 No Content   accepted, including duplicates, unknown ids and non-actionable statuses
+400 Bad Request  the callback is missing the fields needed to identify the message
+403 Forbidden    missing, malformed, replayed or invalid signature
+```
+
+A webhook that is authentic but references an unknown `provider + providerMessageId` answers `204`, not `404`. Both providers treat a non-2xx response as a delivery failure and retry it, and retrying a callback for a message this service does not know about would never succeed. The event is recorded as `WEBHOOK_MESSAGE_NOT_FOUND` instead.
+
+### Twilio
+
+```http
+POST /api/v1/webhooks/twilio
+Content-Type: application/x-www-form-urlencoded
+X-Twilio-Signature: <signature>
+```
+
+`TwilioProvider` sets `statusCallback` on every message it creates, composed from `PUBLIC_BASE_URL`. No domain is hardcoded.
+
+The callback is read field by field rather than validated against a closed DTO, because Twilio may add parameters to callbacks at any time. Only these are used:
+
+```text
+MessageSid      external message id, matched against provider_message_id
+MessageStatus   external status
+ErrorCode       failure diagnostic
+```
+
+Signature validation uses `validateRequest` from the official Twilio SDK. Twilio signs the full callback URL plus the sorted POST parameters, so no hand-rolled HMAC is used.
+
+### Twilio Signature and Proxies
+
+This is the usual source of Twilio signature failures:
+
+```text
+Twilio calls   https://sms.example.com/api/v1/webhooks/twilio
+the app sees   http://internal-service:3000/api/v1/webhooks/twilio
+```
+
+Behind a TLS-terminating proxy or load balancer, the URL the application observes is not the URL Twilio signed, and validation fails. The callback URL is therefore rebuilt from `PUBLIC_BASE_URL` rather than from request headers, which also keeps verification off values a caller could forge. Set `PUBLIC_BASE_URL` to the exact public scheme, host and port that Twilio was configured with.
+
+When the auth token is not configured, every Twilio callback is rejected. Verification fails closed.
+
+### Bird
+
+```http
+POST /api/v1/webhooks/bird
+Content-Type: application/json
+webhook-id: <delivery id>
+webhook-timestamp: <unix seconds>
+webhook-signature: v1,<base64>
+```
+
+Bird signs deliveries with [Standard Webhooks](https://www.standardwebhooks.com/): HMAC-SHA256 over
+
+```text
+{webhook-id}.{webhook-timestamp}.{raw request body}
+```
+
+keyed with the endpoint's own signing secret.
+
+### Bird Raw Body
+
+The signature covers the exact bytes Bird sent. Verifying a payload rebuilt with `JSON.stringify(req.body)` after parsing is the classic webhook bug: re-serialization changes whitespace and key order, and the signature no longer matches.
+
+The application is therefore bootstrapped with `rawBody: true`, which exposes the untouched bytes on `req.rawBody`. Body parsing is unchanged, so existing DTOs, Twilio's form-urlencoded callbacks and Swagger keep working exactly as before.
+
+Verification itself is delegated to `bird.webhooks.unwrap` from the official `@messagebird/sdk`, which is given the raw buffer.
+
+The signing secret comes from `BIRD_WEBHOOK_SECRET`. It is the webhook subscription's own secret, not `BIRD_API_KEY`. While it is empty, every Bird callback is rejected.
+
+### Bird Replay Protection
+
+`webhook-timestamp` is checked against `BIRD_WEBHOOK_TOLERANCE_SECONDS` (default 300) before the signature is verified. Standard Webhooks defines a 5 minute window and the SDK enforces it as well, so configuring a larger value cannot widen the window — only a smaller one takes effect.
+
+### Status Normalization
+
+Twilio:
+
+| MessageStatus                                | Internal status |
+| -------------------------------------------- | --------------- |
+| `sent`                                       | `SENT`          |
+| `delivered`                                  | `DELIVERED`     |
+| `undelivered`                                | `UNDELIVERED`   |
+| `failed`                                     | `FAILED`        |
+| `canceled`                                   | `REJECTED`      |
+| `accepted`, `scheduled`, `queued`, `sending` | ignored         |
+| `read`, `receiving`, `received`              | ignored         |
+| anything else                                | ignored         |
+
+Bird:
+
+| Event type        | Internal status |
+| ----------------- | --------------- |
+| `sms.sent`        | `SENT`          |
+| `sms.delivered`   | `DELIVERED`     |
+| `sms.undelivered` | `UNDELIVERED`   |
+| `sms.failed`      | `FAILED`        |
+| `sms.rejected`    | `REJECTED`      |
+| `sms.expired`     | `UNDELIVERED`   |
+| `sms.accepted`    | ignored         |
+| anything else     | ignored         |
+
+`sms.expired` maps to `UNDELIVERED` because the message was accepted and handed on, and then its validity period elapsed before the carrier could deliver it. That is a delivery failure after acceptance, not a refusal, which is what `UNDELIVERED` means here.
+
+Intermediate statuses are ignored because the send flow already records `SENT` the moment the provider API accepts a message. Applying them again would only risk regressing a message that has moved further along.
+
+An unknown status or event type is never an error. Providers add values over time, so anything unrecognized is logged as `WEBHOOK_STATUS_IGNORED` and answered with `204`.
+
+### Message Identification
+
+A callback is resolved by provider plus external id, never by phone number:
+
+```text
+twilio  MessageSid    → provider_message_id
+bird    data.sms_id   → provider_message_id
+```
+
+The provider is part of the lookup because external ids are only unique per vendor. A Bird id must never resolve a Twilio message. The lookup is backed by an index on `(selected_provider, provider_message_id)`.
+
+### Webhook Idempotency
+
+Bird delivers at-least-once, so the same event can arrive more than once, including concurrently. Deliveries are deduplicated on `webhook-id`:
+
+```text
+sms:webhook:bird:{webhookId}
+```
+
+claimed in Redis with `SET NX` and a `WEBHOOK_IDEMPOTENCY_TTL_SECONDS` expiry. The claim is released if processing throws, so a Bird retry is not silently dropped.
+
+Twilio has no equivalent delivery id, and Redis deduplication is a fast path rather than a correctness guarantee in either case. Idempotency comes from the database write itself, which is expressed as one conditional statement:
+
+```sql
+UPDATE sms_messages
+   SET status = :status, ...
+ WHERE id = :id
+   AND status IN (:allowedPreviousStatuses)
+```
+
+Replaying a `delivered` callback finds the message already `DELIVERED`, which is not an allowed previous status, so the statement changes no rows and nothing else happens:
+
+```text
+SENT → DELIVERED → (delivered again) → DELIVERED
+```
+
+### Out-of-order Events
+
+Neither provider orders its callbacks, so an older event can arrive after a newer one. The progression policy is explicit:
+
+```text
+QUEUED < PROCESSING < SENT < terminal delivery status
+```
+
+Terminal delivery statuses are `DELIVERED`, `UNDELIVERED`, `REJECTED` and `FAILED`. Because the allowed previous statuses are part of the `UPDATE` itself, a regression cannot happen even when two callbacks are processed concurrently:
+
+```text
+DELIVERED + late "sent" callback → stays DELIVERED
+```
+
+For two conflicting terminal outcomes the policy is deliberately conservative rather than last-write-wins:
+
+- `DELIVERED` may upgrade a previously recorded `UNDELIVERED`, `REJECTED` or `FAILED`.
+- No failure status may ever overwrite `DELIVERED`.
+- A different failure status does not replace an already recorded one; the first terminal failure stands.
+
+Every ignored conflict is logged as `WEBHOOK_STATUS_CONFLICT` so the anomaly stays visible. No event history table was added for this stage.
+
+`FATAL_FAILURE` is outside this progression. It belongs to the internal send flow, and a delivery callback never changes a message in that state.
+
+### Persistence
+
+```text
+status        the normalized internal status
+deliveredAt   set when the status becomes DELIVERED
+failedAt      set when delivery ends as UNDELIVERED, REJECTED or FAILED
+lastError     short sanitized diagnostic code
+```
+
+Timestamps prefer the provider's own event timestamp when it carries one, and fall back to the current time otherwise. Twilio status callbacks carry no event timestamp for this purpose, so they use the current time; Bird events carry `timestamp`.
+
+`sentAt` is never modified by a failure callback. A message really can be accepted and sent and only then fail delivery. A `SENT` callback fills `sentAt` only when the send flow left it empty.
+
+`lastError` stores a short code, never a payload:
+
+```text
+TWILIO_ERROR_30003
+TWILIO_STATUS_FAILED
+BIRD_UNREACHABLE
+BIRD_REJECTED
+```
+
+The free-form provider description is discarded, because it can contain the recipient's number or message content.
+
+### Logging
+
+```text
+WEBHOOK_RECEIVED
+WEBHOOK_SIGNATURE_INVALID
+WEBHOOK_PAYLOAD_INVALID
+WEBHOOK_DUPLICATE
+WEBHOOK_MESSAGE_NOT_FOUND
+WEBHOOK_STATUS_UPDATED
+WEBHOOK_STATUS_IGNORED
+WEBHOOK_STATUS_CONFLICT
+```
+
+Log fields are limited to `provider`, `messageId`, `providerMessageId`, `webhookId`, `previousStatus`, `newStatus` and `externalStatus`. Request bodies, phone numbers, message bodies, metadata, signatures and secrets are never logged.
+
+### Local Development
+
+Delivery callbacks need a publicly reachable HTTPS URL. On localhost the providers cannot reach the service, so real callbacks do not arrive. Exposing the port through an HTTP tunnel is one way to receive them; the service does not require or bundle any such tool.
+
+Whatever the origin ends up being, set it as `PUBLIC_BASE_URL` before testing Twilio callbacks: the signature is computed over that exact URL, and a mismatch results in `403`.
+
 ## Running Locally
 
 ```bash
@@ -429,6 +683,28 @@ The API runs on:
 http://localhost:3000/api
 ```
 
+### Webhook Configuration
+
+```env
+PUBLIC_BASE_URL=http://localhost:3000
+BIRD_WEBHOOK_SECRET=
+BIRD_WEBHOOK_TOLERANCE_SECONDS=300
+WEBHOOK_IDEMPOTENCY_TTL_SECONDS=86400
+```
+
+`PUBLIC_BASE_URL` is the single source for the public callback origin. It is used both to compose the `statusCallback` URL sent to Twilio and to validate `X-Twilio-Signature`, so there is no separate `TWILIO_STATUS_CALLBACK_URL`. The default only fits local development; in production it must be the real public HTTPS origin.
+
+Values required only for the provider actually in use:
+
+```text
+TWILIO_AUTH_TOKEN     required to verify any Twilio callback
+BIRD_WEBHOOK_SECRET   required to verify any Bird callback
+```
+
+Both fail closed: while the corresponding value is empty, that provider's callbacks are rejected with `403`.
+
+`BIRD_WEBHOOK_TOLERANCE_SECONDS` and `WEBHOOK_IDEMPOTENCY_TTL_SECONDS` have working defaults and only need to be set to override them.
+
 ## Swagger
 
 ```text
@@ -441,6 +717,8 @@ http://localhost:3000/api/docs
 GET /api/health
 POST /api/v1/sms/send
 POST /api/v1/admin/sms/{messageId}/requeue
+POST /api/v1/webhooks/twilio
+POST /api/v1/webhooks/bird
 ```
 
 `POST /api/v1/sms/send` validates the request, persists the SMS request, enqueues `{ "messageId": "uuid" }`, and returns `202 Accepted`.
@@ -453,6 +731,8 @@ X-Idempotency-Key
 
 `POST /api/v1/admin/sms/{messageId}/requeue` explicitly requeues a `FATAL_FAILURE` message. It returns `202 Accepted` on success, `404 Not Found` for unknown ids, and `409 Conflict` when the message is not eligible.
 
+The two webhook routes are provider callbacks, not endpoints for API consumers. See [Delivery Webhooks](#delivery-webhooks).
+
 ## Tests
 
 ```bash
@@ -462,7 +742,7 @@ npm run test:e2e
 
 The e2e suites talk to the real PostgreSQL and Redis from `docker-compose.yml`.
 
-Queue names are global to a Redis instance, so every e2e suite that boots `AppModule` gives BullMQ a key prefix unique to that run (`bull-e2e-<suite>-<pid>-<random>`). Without it, any other consumer pointed at the same Redis - a `npm run start:dev` in another terminal, or a Nest app leaked by an interrupted run - registers a worker on the same `sms` queue, steals the jobs the tests enqueue and writes the results into the shared database.
+Queue names are global to a Redis instance, so every e2e suite that boots `AppModule` gives BullMQ a key prefix unique to that run (`bull-e2e-<suite>-<pid>-<random>`). Without it, any other consumer pointed at the same Redis — a `npm run start:dev` in another terminal, or a Nest app leaked by an interrupted run — registers a worker on the same `sms` queue, steals the jobs the tests enqueue and writes the results into the shared database.
 
 Two related rules keep the suites deterministic:
 
@@ -490,6 +770,16 @@ Current coverage focuses on:
 - requeue enqueue-failure restore
 - provider rate-limit configuration
 - SMS send flow e2e with PostgreSQL, Redis, BullMQ, worker, and provider mocks
+- Twilio and Bird status mappers, including unknown and intermediate statuses
+- delivery status progression policy and conflict classification
+- diagnostic code sanitization
+- Twilio and Bird payload extraction
+- Twilio signature verification against the official SDK helper
+- Bird Standard Webhooks verification, raw-body integrity and replay tolerance
+- webhook deduplication and claim release
+- delivery status persistence, including timestamps and sanitized `lastError`
+- delivery webhooks e2e for both providers: signature rejection, replay rejection,
+  duplicate deliveries, unknown ids, unknown statuses and status-regression protection
 
 ## Migrations
 
@@ -500,6 +790,8 @@ npm run migration:revert
 ```
 
 The initial migration creates `sms_messages`, its SMS status enum, and a unique constraint for `idempotency_key`.
+
+A second migration adds the `(selected_provider, provider_message_id)` index used to resolve delivery callbacks.
 
 ## Architectural Decisions
 
@@ -533,9 +825,6 @@ These are deliberate boundaries of this implementation, not oversights.
 
 ## Not Implemented Yet
 
-- Twilio webhooks
-- Bird webhooks
-- Webhook signature verification
 - Automatic requeue
 - Circuit breaker
 - Outbox/reconciliation

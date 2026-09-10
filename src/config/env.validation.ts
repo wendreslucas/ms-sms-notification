@@ -3,6 +3,7 @@ import Joi from 'joi';
 export const envValidationSchema = Joi.object({
   NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
   PORT: Joi.number().port().default(3000),
+  PUBLIC_BASE_URL: Joi.string().uri().default('http://localhost:3000'),
 
   DATABASE_HOST: Joi.string().hostname().required(),
   DATABASE_PORT: Joi.number().port().required(),
@@ -28,4 +29,8 @@ export const envValidationSchema = Joi.object({
   BIRD_RATE_LIMIT_DURATION_MS: Joi.number().integer().min(1).required(),
   BIRD_API_KEY: Joi.string().allow('').optional(),
   BIRD_ORIGINATOR: Joi.string().allow('').optional(),
+  BIRD_WEBHOOK_SECRET: Joi.string().allow('').optional(),
+
+  WEBHOOK_IDEMPOTENCY_TTL_SECONDS: Joi.number().integer().min(1).default(86400),
+  BIRD_WEBHOOK_TOLERANCE_SECONDS: Joi.number().integer().min(1).default(300),
 });

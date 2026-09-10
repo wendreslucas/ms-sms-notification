@@ -20,5 +20,6 @@ import { SmsService } from './services/sms.service';
   ],
   controllers: [SmsController, AdminSmsController],
   providers: [SmsService, SmsDispatcherService, SmsProcessor],
+  exports: [SmsService],
 })
 export class SmsModule {}

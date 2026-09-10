@@ -9,6 +9,7 @@ import { ConfigService } from '@nestjs/config';
 import { InjectRepository } from '@nestjs/typeorm';
 import { PinoLogger } from 'nestjs-pino';
 import { QueryFailedError, Repository } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 
 import { LogEvent } from '../../../common/enums/log-event.enum';
 import { QueuePublishException } from '../../../common/exceptions/queue-publish.exception';
@@ -27,6 +28,16 @@ const REQUEUE_PUBLISH_FAILED_ERROR = 'REQUEUE_PUBLISH_FAILED';
 
 interface QueryFailedDriverError {
   code?: string;
+}
+
+export interface ApplyDeliveryStatusParams {
+  messageId: string;
+  status: SmsStatus;
+  allowedPreviousStatuses: SmsStatus[];
+  lastError: string | null;
+  deliveredAt?: Date | null;
+  failedAt?: Date | null;
+  sentAtWhenMissing?: Date;
 }
 
 @Injectable()
@@ -154,6 +165,73 @@ export class SmsService implements OnModuleInit {
     });
 
     return this.smsMessageRepository.save(message);
+  }
+
+  /**
+   * Locates a message from a provider delivery callback.
+   *
+   * The provider is part of the lookup on purpose: external message ids are only
+   * unique per vendor, so a Bird id must never resolve a Twilio message. Delivery
+   * callbacks are never resolved by phone number.
+   */
+  async findByProviderMessageId(
+    provider: string,
+    providerMessageId: string,
+  ): Promise<SmsMessage | null> {
+    return this.smsMessageRepository.findOne({
+      where: {
+        selectedProvider: provider,
+        providerMessageId,
+      },
+    });
+  }
+
+  /**
+   * Applies a delivery status coming from a provider webhook as a single
+   * conditional UPDATE.
+   *
+   * The caller supplies the statuses the message is allowed to be in before the
+   * transition, which makes duplicate and out-of-order callbacks no-ops at the
+   * database level instead of relying on a read-then-write race. Returns whether
+   * a row was actually changed.
+   */
+  async applyDeliveryStatus(params: ApplyDeliveryStatusParams): Promise<boolean> {
+    const updateValues: QueryDeepPartialEntity<SmsMessage> = {
+      status: params.status,
+      lastError: params.lastError,
+    };
+
+    if (params.deliveredAt !== undefined) {
+      updateValues.deliveredAt = params.deliveredAt;
+    }
+
+    if (params.failedAt !== undefined) {
+      updateValues.failedAt = params.failedAt;
+    }
+
+    const queryBuilder = this.smsMessageRepository
+      .createQueryBuilder()
+      .update(SmsMessage)
+      .set(updateValues)
+      .where('id = :messageId', { messageId: params.messageId })
+      .andWhere('status IN (:...allowedPreviousStatuses)', {
+        allowedPreviousStatuses: params.allowedPreviousStatuses,
+      });
+
+    if (params.sentAtWhenMissing) {
+      // A message accepted by the provider keeps its original sentAt; the
+      // fallback only fills the column when the send flow never set it.
+      queryBuilder
+        .set({
+          ...updateValues,
+          sentAt: () => 'COALESCE("sent_at", :sentAtFallback)',
+        })
+        .setParameter('sentAtFallback', params.sentAtWhenMissing);
+    }
+
+    const updateResult = await queryBuilder.execute();
+
+    return (updateResult.affected ?? 0) > 0;
   }
 
   async findById(messageId: string): Promise<SmsMessage | null> {

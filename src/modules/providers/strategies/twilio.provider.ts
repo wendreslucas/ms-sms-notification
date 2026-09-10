@@ -1,6 +1,7 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { buildTwilioStatusCallbackUrl } from '../../webhooks/webhooks.constants';
 import { SendSmsOptions, SendSmsResult, ISmsProvider } from '../interfaces/sms-provider.interface';
 import { normalizeTwilioError } from '../provider-error-classifier';
 import { SmsProviderName } from '../sms-provider-name.enum';
@@ -36,10 +37,12 @@ export class TwilioProvider implements ISmsProvider {
     }
 
     try {
+      const statusCallback = this.resolveStatusCallbackUrl();
       const result = await this.getClient(accountSid, authToken).messages.create({
         to: options.to,
         from,
         body: options.body,
+        ...(statusCallback ? { statusCallback } : {}),
       });
 
       return {
@@ -57,6 +60,17 @@ export class TwilioProvider implements ISmsProvider {
         retryAfterMs: normalizedError.retryAfterMs,
       };
     }
+  }
+
+  /**
+   * Twilio only sends delivery status callbacks for messages created with a
+   * statusCallback URL. The domain is never hardcoded: it is composed from
+   * PUBLIC_BASE_URL, the same value the signature verification uses.
+   */
+  private resolveStatusCallbackUrl(): string | null {
+    const publicBaseUrl = this.configService.get<string>('webhooks.publicBaseUrl') ?? '';
+
+    return publicBaseUrl ? buildTwilioStatusCallbackUrl(publicBaseUrl) : null;
   }
 
   private getClient(accountSid: string, authToken: string): TwilioMessageClient {

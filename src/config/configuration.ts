@@ -21,6 +21,17 @@ export const configuration = () => ({
     idempotencyTtlSeconds: Number(process.env.SMS_IDEMPOTENCY_TTL_SECONDS ?? 86400),
     maxMessageLength: Number(process.env.SMS_MAX_MESSAGE_LENGTH ?? 1600),
   },
+  webhooks: {
+    publicBaseUrl: process.env.PUBLIC_BASE_URL ?? 'http://localhost:3000',
+    idempotencyTtlSeconds: Number(process.env.WEBHOOK_IDEMPOTENCY_TTL_SECONDS ?? 86400),
+    twilio: {
+      authToken: process.env.TWILIO_AUTH_TOKEN ?? '',
+    },
+    bird: {
+      secret: process.env.BIRD_WEBHOOK_SECRET ?? '',
+      toleranceSeconds: Number(process.env.BIRD_WEBHOOK_TOLERANCE_SECONDS ?? 300),
+    },
+  },
   providers: {
     twilio: {
       rateLimitMax: Number(process.env.TWILIO_RATE_LIMIT_MAX ?? 10),

@@ -2,7 +2,12 @@ import Twilio from 'twilio';
 
 export interface TwilioMessageClient {
   messages: {
-    create(options: { to: string; from: string; body: string }): Promise<{ sid: string }>;
+    create(options: {
+      to: string;
+      from: string;
+      body: string;
+      statusCallback?: string;
+    }): Promise<{ sid: string }>;
   };
 }
 
