@@ -175,6 +175,20 @@ export class SmsService implements OnModuleInit {
     );
   }
 
+  /**
+   * Claims a message for dispatch as a single conditional UPDATE.
+   *
+   * PROCESSING is claimable as well as QUEUED. A worker that dies mid-dispatch
+   * leaves the row on PROCESSING; BullMQ then detects the stalled job and hands
+   * it to another worker, and refusing the claim at that point would strand the
+   * message forever with no send, no DLQ entry and no requeue path. BullMQ only
+   * redelivers a job once its lock has expired, so it is the authority on the
+   * previous worker being gone.
+   *
+   * The trade-off is at-least-once: a worker wrongly considered stalled can
+   * cause the same SMS to be sent twice. Losing an accepted message is the worse
+   * outcome of the two.
+   */
   async markProcessing(messageId: string): Promise<boolean> {
     const updateResult = await this.smsMessageRepository
       .createQueryBuilder()
@@ -184,7 +198,9 @@ export class SmsService implements OnModuleInit {
         lastError: null,
       })
       .where('id = :messageId', { messageId })
-      .andWhere('status = :status', { status: SmsStatus.QUEUED })
+      .andWhere('status IN (:...claimableStatuses)', {
+        claimableStatuses: [SmsStatus.QUEUED, SmsStatus.PROCESSING],
+      })
       .execute();
 
     return (updateResult.affected ?? 0) > 0;

@@ -3,6 +3,7 @@ import { ConfigModule } from '@nestjs/config';
 import { LoggerModule } from 'nestjs-pino';
 
 import { configuration } from './config/configuration';
+import { buildLoggerParams } from './config/logger.config';
 import { envValidationSchema } from './config/env.validation';
 import { DatabaseModule } from './database/database.module';
 import { HealthModule } from './modules/health/health.module';
@@ -22,12 +23,7 @@ import { WebhooksModule } from './modules/webhooks/webhooks.module';
         abortEarly: false,
       },
     }),
-    LoggerModule.forRoot({
-      pinoHttp: {
-        level: process.env.NODE_ENV === 'production' ? 'info' : 'debug',
-        redact: ['req.headers.authorization', 'req.headers.cookie'],
-      },
-    }),
+    LoggerModule.forRoot(buildLoggerParams(process.env.NODE_ENV)),
     DatabaseModule,
     IdempotencyModule,
     QueueModule,

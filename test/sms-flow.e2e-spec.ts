@@ -19,6 +19,7 @@ import { ISmsProvider } from '../src/modules/providers/interfaces/sms-provider.i
 import { SmsProviderName } from '../src/modules/providers/sms-provider-name.enum';
 import { ProviderRateLimiterService } from '../src/modules/providers/rate-limiting/provider-rate-limiter.service';
 import { SmsProcessor } from '../src/modules/queue/processors/sms.processor';
+import { QueueService } from '../src/modules/queue/queue.service';
 import { SmsMessage } from '../src/modules/sms/entities/sms-message.entity';
 import { SmsStatus } from '../src/modules/sms/entities/sms-status.enum';
 import {
@@ -40,6 +41,7 @@ describe('SMS send flow (e2e)', () => {
   let smsDlqQueue: Queue;
   let redis: Redis;
   let smsProcessor: SmsProcessor;
+  let queueService: QueueService;
   let twilioProvider: ISmsProvider;
   let birdProvider: ISmsProvider;
 
@@ -91,6 +93,7 @@ describe('SMS send flow (e2e)', () => {
     smsQueue = moduleRef.get<Queue>(getQueueToken(SMS_QUEUE_NAME));
     smsDlqQueue = moduleRef.get<Queue>(getQueueToken(SMS_DLQ_QUEUE_NAME));
     smsProcessor = moduleRef.get(SmsProcessor);
+    queueService = moduleRef.get(QueueService);
     redis = new Redis({
       ...buildRedisConnectionOptions(),
       maxRetriesPerRequest: 3,
@@ -193,6 +196,33 @@ describe('SMS send flow (e2e)', () => {
     expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
   });
 
+  it('creates a single message when two requests race with the same idempotency key', async () => {
+    const payload = {
+      to: '+14155552671',
+      message: 'Your verification code is 482019',
+    };
+
+    const responses = await Promise.all([
+      request(app.getHttpServer())
+        .post('/api/v1/sms/send')
+        .set('X-Idempotency-Key', 'e2e-concurrent-request')
+        .send(payload),
+      request(app.getHttpServer())
+        .post('/api/v1/sms/send')
+        .set('X-Idempotency-Key', 'e2e-concurrent-request')
+        .send(payload),
+    ]);
+
+    expect(responses.map((response) => response.status)).toEqual([202, 202]);
+    expect(responses[0].body.data.messageId).toBe(responses[1].body.data.messageId);
+    await expect(repository.count()).resolves.toBe(1);
+
+    // A single SMS is sent, not one per request.
+    await waitForMessageStatus(responses[0].body.data.messageId, SmsStatus.SENT);
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+  });
+
   it('moves exhausted messages to DLQ and requeues the same message explicitly', async () => {
     configureAllProvidersFailRetryable();
 
@@ -232,6 +262,24 @@ describe('SMS send flow (e2e)', () => {
     expect(sentMessage.selectedProvider).toBe(SmsProviderName.TWILIO);
     expect(sentMessage.providerMessageId).toBe('SM_REQUEUED');
     await expect(repository.count()).resolves.toBe(1);
+  });
+
+  it('recovers a message stranded in PROCESSING by a crashed worker', async () => {
+    // The state a worker crash leaves behind: claimed for dispatch, never sent,
+    // with its BullMQ job redelivered afterwards.
+    const strandedMessage = await createMessage({
+      status: SmsStatus.PROCESSING,
+      attempts: 1,
+    });
+
+    await queueService.enqueueSms(strandedMessage.id);
+
+    const sentMessage = await waitForMessageStatus(strandedMessage.id, SmsStatus.SENT);
+    expect(sentMessage.selectedProvider).toBe(SmsProviderName.BIRD);
+    expect(sentMessage.providerMessageId).toBe('BIRD_E2E');
+    expect(sentMessage.sentAt).toBeInstanceOf(Date);
+    // The attempt counter continues from where the interrupted dispatch stopped.
+    expect(sentMessage.attempts).toBe(5);
   });
 
   it('rejects requeue for sent messages', async () => {

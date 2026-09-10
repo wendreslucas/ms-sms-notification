@@ -175,13 +175,59 @@ describe('SmsDispatcherService', () => {
     expect(twilioProvider.sendSms).not.toHaveBeenCalled();
   });
 
-  it('skips messages already sent', async () => {
-    smsService.findById.mockResolvedValue(buildMessage({ status: SmsStatus.SENT }));
+  it.each([
+    SmsStatus.SENT,
+    SmsStatus.DELIVERED,
+    SmsStatus.UNDELIVERED,
+    SmsStatus.REJECTED,
+    SmsStatus.FAILED,
+    SmsStatus.FATAL_FAILURE,
+  ])('skips messages already in %s', async (status) => {
+    smsService.findById.mockResolvedValue(buildMessage({ status }));
 
     await dispatcher.dispatch(MESSAGE_ID);
 
     expect(twilioProvider.sendSms).not.toHaveBeenCalled();
     expect(smsService.markProcessing).not.toHaveBeenCalled();
+  });
+
+  it('reclaims a message stranded in PROCESSING by an interrupted dispatch', async () => {
+    providers = [twilioProvider];
+    smsService.findById.mockResolvedValue(
+      buildMessage({ status: SmsStatus.PROCESSING, attempts: 2 }),
+    );
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(smsService.markProcessing).toHaveBeenCalledWith(MESSAGE_ID);
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(smsService.markSent).toHaveBeenCalledWith(
+      MESSAGE_ID,
+      SmsProviderName.TWILIO,
+      'SM_TWILIO',
+    );
+  });
+
+  it('does not dispatch when another worker holds the claim', async () => {
+    smsService.findById.mockResolvedValue(buildMessage({ status: SmsStatus.PROCESSING }));
+    smsService.markProcessing.mockResolvedValue(false);
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(twilioProvider.sendSms).not.toHaveBeenCalled();
+    expect(smsService.markSent).not.toHaveBeenCalled();
+  });
+
+  it('treats a provider that throws as a retryable failure and fails over', async () => {
+    twilioProvider.sendSms = jest.fn(async () => {
+      throw new Error('socket hang up');
+    });
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(twilioProvider.sendSms).toHaveBeenCalledTimes(3);
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+    expect(smsService.markSent).toHaveBeenCalledWith(MESSAGE_ID, SmsProviderName.BIRD, 'BIRD_SMS');
   });
 
   it('retries a retryable failure and succeeds with the same provider', async () => {

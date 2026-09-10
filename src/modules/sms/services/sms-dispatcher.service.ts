@@ -13,11 +13,20 @@ import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
 import { SmsService } from './sms.service';
 
-const TERMINAL_OR_POST_SEND_STATUSES = new Set<SmsStatus>([
+/**
+ * Statuses a queue job must never act on again.
+ *
+ * QUEUED and PROCESSING are deliberately absent: the claim in
+ * `SmsService.markProcessing` is the atomic authority on who dispatches, and
+ * PROCESSING has to stay reachable so a message stranded by a crashed worker
+ * can be picked up when BullMQ redelivers its job.
+ */
+const NON_DISPATCHABLE_STATUSES = new Set<SmsStatus>([
   SmsStatus.SENT,
   SmsStatus.DELIVERED,
   SmsStatus.UNDELIVERED,
   SmsStatus.REJECTED,
+  SmsStatus.FAILED,
   SmsStatus.FATAL_FAILURE,
 ]);
 
@@ -56,8 +65,8 @@ export class SmsDispatcherService implements OnModuleInit {
       return;
     }
 
-    const transitioned = await this.smsService.markProcessing(message.id);
-    if (!transitioned) {
+    const claimed = await this.smsService.markProcessing(message.id);
+    if (!claimed) {
       const latestMessage = await this.smsService.findById(message.id);
       this.logger.info(
         {
@@ -70,13 +79,22 @@ export class SmsDispatcherService implements OnModuleInit {
       return;
     }
 
+    if (message.status === SmsStatus.PROCESSING) {
+      this.logger.warn(
+        {
+          event: LogEvent.MESSAGE_RECLAIMED,
+          messageId: message.id,
+          attempts: message.attempts,
+        },
+        'SMS message was left in PROCESSING by an interrupted dispatch and has been reclaimed',
+      );
+    }
+
     await this.dispatchAcrossProviders(message);
   }
 
   private shouldSkip(message: SmsMessage): boolean {
-    return (
-      message.status !== SmsStatus.QUEUED || TERMINAL_OR_POST_SEND_STATUSES.has(message.status)
-    );
+    return NON_DISPATCHABLE_STATUSES.has(message.status);
   }
 
   private async dispatchAcrossProviders(message: SmsMessage): Promise<void> {

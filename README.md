@@ -324,7 +324,9 @@ No provider SDK response object is exposed to the domain.
 
 This stage implements synchronous in-worker retries and failover. A worker handling a long provider outage remains busy while sleeping for retry backoff. A future production evolution could move delayed retries back into a durable scheduler or workflow engine.
 
-BullMQ is at-least-once. The worker skips messages already in `SENT`, `DELIVERED`, `UNDELIVERED`, `REJECTED`, `FATAL_FAILURE`, or otherwise not `QUEUED`.
+BullMQ is at-least-once. A queue job is ignored when the message already reached `SENT`, `DELIVERED`, `UNDELIVERED`, `REJECTED`, `FAILED` or `FATAL_FAILURE`.
+
+`QUEUED` and `PROCESSING` are both claimable, because a worker that dies mid-dispatch leaves the row on `PROCESSING`. See [Crash Recovery](#crash-recovery).
 
 There is a known crash window:
 
@@ -337,6 +339,25 @@ SENT is not persisted yet
 A later duplicate job could send again because PostgreSQL would still not know the provider accepted the message. Bird provider idempotency reduces this risk for Bird. Twilio sends still have this crash-window limitation in this implementation. Solving it fully requires stronger delivery semantics, provider-side idempotency where available, and/or an outbox/reconciliation design. That is intentionally outside this stage.
 
 Messages in `FATAL_FAILURE` are durable in PostgreSQL even if DLQ publication fails. They can be reconciled or requeued manually through the admin endpoint.
+
+## Crash Recovery
+
+A worker that dies between claiming a message and finishing the dispatch leaves the row on `PROCESSING`. BullMQ notices the stalled job once its lock expires and hands it to another worker.
+
+The claim is a single conditional statement that accepts both states:
+
+```sql
+UPDATE sms_messages
+   SET status = 'PROCESSING'
+ WHERE id = :id
+   AND status IN ('QUEUED', 'PROCESSING')
+```
+
+Because it is one statement, two workers racing for the same message still cannot both win, and the attempt counter continues from where the interrupted dispatch stopped instead of restarting.
+
+Accepting `PROCESSING` here is deliberate. Refusing it would strand the message permanently: it would never be sent, never reach the DLQ, and never become eligible for the admin requeue endpoint, which only accepts `FATAL_FAILURE`. Losing a message that was already accepted is a worse outcome than the alternative, which is the at-least-once trade-off below.
+
+The trade-off: BullMQ can consider a worker stalled while it is in fact alive but blocked. Two dispatches would then run for the same message and the recipient could receive the SMS twice. This is inherent to at-least-once delivery and is bounded by BullMQ's lock duration.
 
 ## Idempotency
 
@@ -493,6 +514,22 @@ X-Idempotency-Key
 The key is rejected from the body by the global whitelist/forbid validation behavior.
 
 PostgreSQL is the source of truth for SMS message state. Redis supports BullMQ and idempotency coordination.
+
+## Known Limitations
+
+These are deliberate boundaries of this implementation, not oversights.
+
+**No Transactional Outbox.** The API commits to PostgreSQL and then publishes to BullMQ. A crash in between leaves a `QUEUED` row with no job, and nothing sweeps for those rows, so such a message is never sent. An enqueue that _fails_ is compensated (marked `FAILED` with `QUEUE_PUBLISH_FAILED`, no `202` returned); an enqueue that never _runs_ is not. Closing this properly means an outbox table written in the same transaction plus a relay process, which changes the write path and adds a component to operate. See [Consistency Note](#consistency-note).
+
+**Twilio sends are not idempotent.** `BirdProvider` passes an idempotency key derived from the message id, so a redelivered job cannot produce a second Bird SMS. Twilio's Programmable Messaging API offers no equivalent, so a crash after Twilio accepted a message but before `SENT` was persisted can result in a duplicate SMS on redelivery.
+
+**DLQ publication is best-effort.** If the process dies after `FATAL_FAILURE` is persisted but before the DLQ job is published, the message is absent from the DLQ. PostgreSQL remains the source of truth and the message is still recoverable through the admin requeue endpoint; the DLQ is a secondary index, not the record.
+
+**The admin requeue endpoint is unauthenticated.** It is documented as requiring administrative authentication and authorization in production, and it must not be exposed publicly as it stands.
+
+**`GET /api/health` is liveness only.** It reports that the process is up; it does not probe PostgreSQL or Redis. A readiness probe that checks both dependencies would be the production evolution.
+
+**Retries occupy the worker.** Retry backoff is an in-worker sleep, so a long provider outage keeps workers busy waiting rather than releasing them back to the queue.
 
 ## Not Implemented Yet
 
