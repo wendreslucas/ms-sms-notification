@@ -242,17 +242,6 @@ export class SmsService implements OnModuleInit {
     });
   }
 
-  async updateStatus(messageId: string, status: SmsStatus, lastError?: string): Promise<void> {
-    await this.smsMessageRepository.update(
-      { id: messageId },
-      {
-        status,
-        lastError: lastError ?? null,
-        failedAt: status === SmsStatus.FAILED ? new Date() : null,
-      },
-    );
-  }
-
   /**
    * Claims a message for dispatch as a single conditional UPDATE.
    *
@@ -309,18 +298,6 @@ export class SmsService implements OnModuleInit {
         lastError: null,
         sentAt: new Date(),
         failedAt: null,
-      },
-    );
-  }
-
-  async markFailed(messageId: string, selectedProvider: string, lastError: string): Promise<void> {
-    await this.smsMessageRepository.update(
-      { id: messageId },
-      {
-        status: SmsStatus.FAILED,
-        selectedProvider,
-        lastError,
-        failedAt: new Date(),
       },
     );
   }
@@ -473,7 +450,14 @@ export class SmsService implements OnModuleInit {
   }
 
   private async markQueuePublishFailed(messageId: string): Promise<void> {
-    await this.updateStatus(messageId, SmsStatus.FAILED, QUEUE_PUBLISH_FAILED_ERROR);
+    await this.smsMessageRepository.update(
+      { id: messageId },
+      {
+        status: SmsStatus.FAILED,
+        lastError: QUEUE_PUBLISH_FAILED_ERROR,
+        failedAt: new Date(),
+      },
+    );
   }
 
   private async transitionFatalFailureToQueued(messageId: string): Promise<boolean> {

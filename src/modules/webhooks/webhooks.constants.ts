@@ -19,7 +19,7 @@ export const BIRD_WEBHOOK_IDEMPOTENCY_KEY_PREFIX = 'sms:webhook:bird';
  * internal request may arrive as plain HTTP while Twilio called HTTPS, which is
  * why the origin comes from PUBLIC_BASE_URL instead of request headers.
  */
-function buildPublicWebhookUrl(publicBaseUrl: string, route: string): string {
+export function buildPublicWebhookUrl(publicBaseUrl: string, route: string): string {
   const normalizedBaseUrl = publicBaseUrl.replace(/\/+$/, '');
 
   return `${normalizedBaseUrl}/${API_GLOBAL_PREFIX}/v${API_DEFAULT_VERSION}/${WEBHOOKS_ROUTE_PATH}/${route}`;

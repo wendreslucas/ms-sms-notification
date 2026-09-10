@@ -17,7 +17,6 @@ type SmsServiceMock = {
   markProcessing: jest.Mock<Promise<boolean>, [string]>;
   incrementAttempts: jest.Mock<Promise<void>, [string]>;
   markSent: jest.Mock<Promise<void>, [string, string, string | null]>;
-  markFailed: jest.Mock<Promise<void>, [string, string, string]>;
   markFatalFailure: jest.Mock<Promise<void>, [string, string, string]>;
 };
 
@@ -71,9 +70,6 @@ describe('SmsDispatcherService', () => {
       markSent: jest.fn(
         async (_messageId: string, _provider: string, _providerMessageId: string | null) =>
           undefined,
-      ),
-      markFailed: jest.fn(
-        async (_messageId: string, _provider: string, _lastError: string) => undefined,
       ),
       markFatalFailure: jest.fn(
         async (_messageId: string, _provider: string, _lastError: string) => undefined,
@@ -255,7 +251,6 @@ describe('SmsDispatcherService', () => {
       SmsProviderName.TWILIO,
       'SM_AFTER_RETRY',
     );
-    expect(smsService.markFailed).not.toHaveBeenCalled();
   });
 
   it('fails over after retryable failures are exhausted', async () => {

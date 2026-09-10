@@ -1,8 +1,10 @@
 import { Controller, Get } from '@nestjs/common';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
 
+import { HEALTH_ROUTE_PATH } from '../../config/constants';
+
 @ApiTags('health')
-@Controller('health')
+@Controller(HEALTH_ROUTE_PATH)
 export class HealthController {
   @Get()
   @ApiOperation({ summary: 'Health check' })

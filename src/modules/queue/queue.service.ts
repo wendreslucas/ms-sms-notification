@@ -22,10 +22,6 @@ export class QueueService {
     @InjectQueue(SMS_DLQ_QUEUE_NAME) private readonly smsDlqQueue: Queue,
   ) {}
 
-  getQueueNames(): string[] {
-    return [this.smsQueue.name, this.smsDlqQueue.name];
-  }
-
   async enqueueSms(messageId: string, options: EnqueueSmsOptions = {}): Promise<void> {
     const payload: SendSmsJobPayload = { messageId };
 

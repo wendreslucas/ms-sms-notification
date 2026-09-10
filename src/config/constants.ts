@@ -2,3 +2,5 @@ export const IDEMPOTENCY_KEY_HEADER = 'X-Idempotency-Key';
 export const IDEMPOTENCY_KEY_MAX_LENGTH = 255;
 export const API_GLOBAL_PREFIX = 'api';
 export const API_DEFAULT_VERSION = '1';
+export const HEALTH_ROUTE_PATH = 'health';
+export const SWAGGER_DOCS_PATH = 'docs';
