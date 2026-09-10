@@ -672,9 +672,33 @@ Log fields are limited to `provider`, `messageId`, `providerMessageId`, `webhook
 
 ### Local Development
 
-Delivery callbacks need a publicly reachable HTTPS URL. On localhost the providers cannot reach the service, so real callbacks do not arrive. Exposing the port through an HTTP tunnel is one way to receive them; the service does not require or bundle any such tool.
+Delivery callbacks need a publicly reachable HTTPS URL. On localhost the providers cannot reach the service, so real callbacks do not arrive. An HTTP tunnel solves this for local testing. The steps below use [ngrok](https://ngrok.com) as an example; Cloudflare Tunnel or any similar tool works the same way, and the service neither requires nor bundles one.
 
-Whatever the origin ends up being, set it as `PUBLIC_BASE_URL` before testing Twilio callbacks: the signature is computed over that exact URL, and a mismatch results in `403`.
+Start a tunnel to the API port:
+
+```bash
+ngrok http 3001
+```
+
+Set the HTTPS forwarding URL the tunnel prints as `PUBLIC_BASE_URL` in `.env`, then restart the service:
+
+```env
+PUBLIC_BASE_URL=https://<tunnel-host>
+```
+
+That single value covers Twilio end to end. `TwilioProvider` composes each message's `statusCallback` from it, so Twilio calls the tunnel without any console configuration, and `X-Twilio-Signature` is validated against the same URL. If `PUBLIC_BASE_URL` differs from the URL Twilio actually calls, even only in its scheme, the signature check fails and the callback is rejected with `403`.
+
+Bird delivers events through a webhook subscription, so register this endpoint there, subscribed to the `sms.*` events, and copy the subscription's signing secret (`whsec_...`) into `BIRD_WEBHOOK_SECRET`:
+
+```text
+https://<tunnel-host>/api/v1/webhooks/bird
+```
+
+Tunnel URLs usually change every time the tunnel restarts. When that happens, update `PUBLIC_BASE_URL` and the Bird subscription, or use a fixed tunnel domain if your plan provides one. Messages sent before the change keep the old callback URL, so their Twilio callbacks will not arrive.
+
+The tunnel terminates HTTPS and forwards plain HTTP to localhost, which is exactly the proxy situation described in [Twilio Signature and Proxies](#twilio-signature-and-proxies). Validation still holds because the URL comes from `PUBLIC_BASE_URL`, not from request headers.
+
+**A tunnel exposes the whole API, not only the webhooks.** The webhook routes verify signatures and fail closed, but `POST /api/v1/sms/send` and `POST /api/v1/admin/sms/{messageId}/requeue` are unauthenticated (see [Known Limitations](#known-limitations)). With real provider credentials in `.env`, anyone who learns the tunnel URL can send SMS billed to your account. Keep the tunnel up only while testing, do not share its URL, and stop it when you are done.
 
 ## Running Locally
 
@@ -707,7 +731,7 @@ BIRD_WEBHOOK_TOLERANCE_SECONDS=300
 WEBHOOK_IDEMPOTENCY_TTL_SECONDS=86400
 ```
 
-`PUBLIC_BASE_URL` is the single source for the public callback origin. It is used both to compose the `statusCallback` URL sent to Twilio and to validate `X-Twilio-Signature`, so there is no separate `TWILIO_STATUS_CALLBACK_URL`. The default only fits local development; in production it must be the real public HTTPS origin.
+`PUBLIC_BASE_URL` is the single source for the public callback origin. It is used both to compose the `statusCallback` URL sent to Twilio and to validate `X-Twilio-Signature`, so there is no separate `TWILIO_STATUS_CALLBACK_URL`. The default only fits local development; in production it must be the real public HTTPS origin. To receive real callbacks while developing, see [Local Development](#local-development).
 
 Values required only for the provider actually in use:
 
