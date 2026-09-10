@@ -22,6 +22,31 @@ describe('SendSmsDto', () => {
     expect(errors).toHaveLength(0);
   });
 
+  it.each(['+14155552671', '+442071838750', '+5511987654321'])(
+    'accepts the E.164 number %s',
+    async (to) => {
+      const errors = await validate(plainToInstance(SendSmsDto, { to, message: 'hello' }));
+
+      expect(errors).toHaveLength(0);
+    },
+  );
+
+  it.each([
+    ['no leading plus', '14155552671'],
+    ['too short to be a real number', '+123'],
+    ['not a number at all', 'abc'],
+    ['formatted for humans', '(415) 555-2671'],
+    ['leading zero country code', '+0155552671'],
+    ['more than 15 digits', '+1234567890123456'],
+    ['contains spaces', '+1 415 555 2671'],
+    ['empty', ''],
+  ])('rejects %s', async (_label, to) => {
+    const errors = await validate(plainToInstance(SendSmsDto, { to, message: 'hello' }));
+
+    expect(errors.length).toBeGreaterThan(0);
+    expect(JSON.stringify(errors)).toContain('to');
+  });
+
   it('rejects an invalid phone number', async () => {
     const errors = await validatePayload({
       to: '14155552671',
