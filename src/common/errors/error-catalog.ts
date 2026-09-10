@@ -24,8 +24,10 @@ export enum ErrorCode {
   PROVIDER_NONE_CONFIGURED = 'PROVIDER_NONE_CONFIGURED',
   PROVIDER_UNKNOWN = 'PROVIDER_UNKNOWN',
   PROVIDER_NOT_REGISTERED = 'PROVIDER_NOT_REGISTERED',
+  PROVIDER_DUPLICATE = 'PROVIDER_DUPLICATE',
 
   RATE_LIMIT_STORE_INVALID_RESPONSE = 'RATE_LIMIT_STORE_INVALID_RESPONSE',
+  RATE_LIMIT_NOT_CONFIGURED = 'RATE_LIMIT_NOT_CONFIGURED',
   RETRY_INVALID_CONFIGURATION = 'RETRY_INVALID_CONFIGURATION',
 
   WEBHOOK_TWILIO_SIGNATURE_INVALID = 'WEBHOOK_TWILIO_SIGNATURE_INVALID',
@@ -104,9 +106,17 @@ export const ERROR_CATALOG: Readonly<Record<ErrorCode, ErrorDefinition>> = {
     message: 'SMS provider is not registered.',
     httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
   },
+  [ErrorCode.PROVIDER_DUPLICATE]: {
+    message: 'More than one SMS provider is registered under the same name.',
+    httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
 
   [ErrorCode.RATE_LIMIT_STORE_INVALID_RESPONSE]: {
     message: 'Rate-limit store returned an unexpected response.',
+    httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
+  },
+  [ErrorCode.RATE_LIMIT_NOT_CONFIGURED]: {
+    message: 'SMS provider has no valid rate limit configured.',
     httpStatus: HttpStatus.INTERNAL_SERVER_ERROR,
   },
   [ErrorCode.RETRY_INVALID_CONFIGURATION]: {

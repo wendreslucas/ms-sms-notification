@@ -1,8 +1,8 @@
-import { Inject, Injectable } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
-import { UnknownProviderError } from '../../../common/errors/unknown-provider-error';
-import { SmsProviderName } from '../sms-provider-name.enum';
+import { RateLimitNotConfiguredError } from '../../../common/errors/rate-limit-not-configured-error';
+import { ProviderRegistryService } from '../provider-registry.service';
 import {
   RATE_LIMIT_COUNTER_STORE,
   RateLimitCounterStore,
@@ -14,22 +14,37 @@ export interface ProviderRateLimitConfig {
 }
 
 @Injectable()
-export class ProviderRateLimiterService {
+export class ProviderRateLimiterService implements OnModuleInit {
   constructor(
     private readonly configService: ConfigService,
     @Inject(RATE_LIMIT_COUNTER_STORE)
     private readonly counterStore: RateLimitCounterStore,
+    private readonly providerRegistry: ProviderRegistryService,
   ) {}
 
-  getLimitConfig(providerName: string): ProviderRateLimitConfig {
-    const providerKey = this.toProviderKey(providerName);
+  /**
+   * A provider without limits would otherwise fail only on its first send:
+   * for a fallback provider, that is in the middle of an incident, and outside
+   * the dispatcher's per-send error handling. Checking every configured
+   * provider here turns it into a startup error.
+   */
+  onModuleInit(): void {
+    for (const providerName of this.providerRegistry.getConfiguredProviderNames()) {
+      this.getLimitConfig(providerName);
+    }
+  }
 
-    return {
-      max: this.configService.getOrThrow<number>(`providers.${providerKey}.rateLimitMax`),
-      durationMs: this.configService.getOrThrow<number>(
-        `providers.${providerKey}.rateLimitDurationMs`,
-      ),
-    };
+  getLimitConfig(providerName: string): ProviderRateLimitConfig {
+    const max = this.configService.get<number>(`providers.${providerName}.rateLimitMax`);
+    const durationMs = this.configService.get<number>(
+      `providers.${providerName}.rateLimitDurationMs`,
+    );
+
+    if (!isPositiveInteger(max) || !isPositiveInteger(durationMs)) {
+      throw new RateLimitNotConfiguredError(providerName);
+    }
+
+    return { max, durationMs };
   }
 
   async throttle(providerName: string): Promise<void> {
@@ -48,21 +63,13 @@ export class ProviderRateLimiterService {
     }
   }
 
-  private toProviderKey(providerName: string): SmsProviderName {
-    if (providerName === SmsProviderName.TWILIO) {
-      return SmsProviderName.TWILIO;
-    }
-
-    if (providerName === SmsProviderName.BIRD) {
-      return SmsProviderName.BIRD;
-    }
-
-    throw new UnknownProviderError(providerName);
-  }
-
   private async sleep(milliseconds: number): Promise<void> {
     await new Promise((resolve) => {
       setTimeout(resolve, milliseconds);
     });
   }
+}
+
+function isPositiveInteger(value: unknown): value is number {
+  return typeof value === 'number' && Number.isInteger(value) && value >= 1;
 }

@@ -17,3 +17,6 @@ export interface ISmsProvider {
 
   sendSms(options: SendSmsOptions): Promise<SendSmsResult>;
 }
+
+/** Injection token for the list of every registered ISmsProvider. */
+export const SMS_PROVIDERS = 'SMS_PROVIDERS';

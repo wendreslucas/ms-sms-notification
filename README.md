@@ -145,6 +145,25 @@ BIRD_API_KEY=
 BIRD_ORIGINATOR=
 ```
 
+### Adding a Provider
+
+The dispatcher, the registry and the rate limiter never name a vendor, so a new provider is a new strategy plus its registration:
+
+1. Implement `ISmsProvider` in `src/modules/providers/strategies/` with a unique `providerName`. `sendSms()` returns a normalized `SendSmsResult` instead of throwing, and the SDK client is created with its own retries off, because the dispatcher owns retries.
+2. Add the class to `SMS_PROVIDER_STRATEGIES` in `providers.module.ts`, along with its SDK client factory token if it has one.
+3. Add its rate limit under `providers.<providerName>` in `configuration.ts`, and its credentials and limits to `env.validation.ts` and `.env.example`.
+4. List it in `SMS_PROVIDER_PRIORITY`.
+
+Nothing else changes: not the dispatcher, the queue worker, `SmsService` or the database, where `selected_provider` is a plain string column. The registry is keyed by each provider's own `providerName`; `SmsProviderName` only names the built-in providers for code that refers to one of them directly, such as its webhook.
+
+Registration mistakes fail at startup instead of on the first send:
+
+- two providers with the same `providerName`: `PROVIDER_DUPLICATE`
+- a name in `SMS_PROVIDER_PRIORITY` that matches no registered provider: `PROVIDER_UNKNOWN`
+- a provider in `SMS_PROVIDER_PRIORITY` without rate limits: `RATE_LIMIT_NOT_CONFIGURED`
+
+Delivery status callbacks are vendor-specific and optional. Without one, messages sent through the new provider stay `SENT`; see [Delivery Webhooks](#delivery-webhooks).
+
 ## Provider Priority
 
 Provider order is controlled by:
@@ -158,7 +177,7 @@ The dispatcher tries providers in this exact order. For example:
 - `twilio,bird` tries Twilio first, then Bird.
 - `bird,twilio` tries Bird first, then Twilio.
 
-Unknown or empty provider configuration fails with a clear startup error.
+A name that matches no registered provider, or an empty list, fails at startup with a clear error.
 
 ## Retry Policy
 
@@ -310,6 +329,8 @@ BIRD_RATE_LIMIT_DURATION_MS=1000
 ```
 
 The limits are local service-side limits. They are configurable guardrails and intentionally do not hardcode Twilio or Bird commercial account limits.
+
+Each provider reads its limits from `providers.<providerName>` in `configuration.ts`, so the limiter itself never names a vendor. Every provider in `SMS_PROVIDER_PRIORITY` must have valid limits: a missing one fails at startup with `RATE_LIMIT_NOT_CONFIGURED`, instead of on that provider's first send, which for a fallback provider would be in the middle of an incident.
 
 ## SDK Retry Policy
 

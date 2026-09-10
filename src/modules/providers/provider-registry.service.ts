@@ -1,36 +1,41 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Inject, Injectable, OnModuleInit } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 
+import { DuplicateProviderError } from '../../common/errors/duplicate-provider-error';
 import { NoProviderConfiguredError } from '../../common/errors/no-provider-configured-error';
 import { ProviderNotRegisteredError } from '../../common/errors/provider-not-registered-error';
 import { ProviderPriorityEmptyError } from '../../common/errors/provider-priority-empty-error';
 import { UnknownProviderError } from '../../common/errors/unknown-provider-error';
-import { ISmsProvider } from './interfaces/sms-provider.interface';
-import { SmsProviderName } from './sms-provider-name.enum';
-import { BirdProvider } from './strategies/bird.provider';
-import { TwilioProvider } from './strategies/twilio.provider';
+import { ISmsProvider, SMS_PROVIDERS } from './interfaces/sms-provider.interface';
 
+/**
+ * Holds every registered provider under its own `providerName` and resolves
+ * the ones SMS_PROVIDER_PRIORITY selects, in that order. It knows no vendor:
+ * providers reach it through the SMS_PROVIDERS token.
+ */
 @Injectable()
 export class ProviderRegistryService implements OnModuleInit {
-  private readonly providers: Map<SmsProviderName, ISmsProvider>;
+  private readonly providers = new Map<string, ISmsProvider>();
   private orderedProviders: ISmsProvider[] = [];
 
   constructor(
     private readonly configService: ConfigService,
-    twilioProvider: TwilioProvider,
-    birdProvider: BirdProvider,
+    @Inject(SMS_PROVIDERS) providers: ISmsProvider[],
   ) {
-    this.providers = new Map<SmsProviderName, ISmsProvider>([
-      [SmsProviderName.TWILIO, twilioProvider],
-      [SmsProviderName.BIRD, birdProvider],
-    ]);
+    for (const provider of providers) {
+      if (this.providers.has(provider.providerName)) {
+        throw new DuplicateProviderError(provider.providerName);
+      }
+
+      this.providers.set(provider.providerName, provider);
+    }
   }
 
   onModuleInit(): void {
     this.orderedProviders = this.resolveConfiguredProviders();
   }
 
-  getConfiguredProviderNames(): SmsProviderName[] {
+  getConfiguredProviderNames(): string[] {
     const rawValue = this.configService.getOrThrow<string>('sms.providerPriority');
     const providerNames = rawValue
       .split(',')
@@ -41,7 +46,15 @@ export class ProviderRegistryService implements OnModuleInit {
       throw new ProviderPriorityEmptyError();
     }
 
-    return providerNames.map((providerName) => this.toProviderName(providerName));
+    const unknownProviderName = providerNames.find(
+      (providerName) => !this.providers.has(providerName),
+    );
+
+    if (unknownProviderName !== undefined) {
+      throw new UnknownProviderError(unknownProviderName);
+    }
+
+    return providerNames;
   }
 
   getProviders(): ISmsProvider[] {
@@ -58,7 +71,7 @@ export class ProviderRegistryService implements OnModuleInit {
     return provider;
   }
 
-  getProvider(providerName: SmsProviderName): ISmsProvider {
+  getProvider(providerName: string): ISmsProvider {
     const provider = this.providers.get(providerName);
 
     if (!provider) {
@@ -70,17 +83,5 @@ export class ProviderRegistryService implements OnModuleInit {
 
   private resolveConfiguredProviders(): ISmsProvider[] {
     return this.getConfiguredProviderNames().map((providerName) => this.getProvider(providerName));
-  }
-
-  private toProviderName(providerName: string): SmsProviderName {
-    if (providerName === SmsProviderName.TWILIO) {
-      return SmsProviderName.TWILIO;
-    }
-
-    if (providerName === SmsProviderName.BIRD) {
-      return SmsProviderName.BIRD;
-    }
-
-    throw new UnknownProviderError(providerName);
   }
 }

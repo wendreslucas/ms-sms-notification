@@ -829,3 +829,931 @@ Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
 {"level":30,"time":1789049594530,"pid":20132,"hostname":"WLS","req":{"id":13,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59057},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
 {"level":30,"time":1789049624544,"pid":20132,"hostname":"WLS","req":{"id":14,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":54279},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
 {"level":30,"time":1789049654553,"pid":20132,"hostname":"WLS","req":{"id":15,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62937},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049684569,"pid":20132,"hostname":"WLS","req":{"id":16,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":55093},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049714586,"pid":20132,"hostname":"WLS","req":{"id":17,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":52689},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049744595,"pid":20132,"hostname":"WLS","req":{"id":18,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":53980},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789049774610,"pid":20132,"hostname":"WLS","req":{"id":19,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62428},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049804636,"pid":20132,"hostname":"WLS","req":{"id":20,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":56272},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049834650,"pid":20132,"hostname":"WLS","req":{"id":21,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":55295},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789049864659,"pid":20132,"hostname":"WLS","req":{"id":22,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":52550},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789049894686,"pid":20132,"hostname":"WLS","req":{"id":23,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59088},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789049924699,"pid":20132,"hostname":"WLS","req":{"id":24,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59308},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789049954710,"pid":20132,"hostname":"WLS","req":{"id":25,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":57474},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789049984718,"pid":20132,"hostname":"WLS","req":{"id":26,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61949},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050014730,"pid":20132,"hostname":"WLS","req":{"id":27,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59487},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050044746,"pid":20132,"hostname":"WLS","req":{"id":28,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":53160},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050074754,"pid":20132,"hostname":"WLS","req":{"id":29,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":57638},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050104763,"pid":20132,"hostname":"WLS","req":{"id":30,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":58386},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050134782,"pid":20132,"hostname":"WLS","req":{"id":31,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61765},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050164793,"pid":20132,"hostname":"WLS","req":{"id":32,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":57966},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050194808,"pid":20132,"hostname":"WLS","req":{"id":33,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":51920},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050224828,"pid":20132,"hostname":"WLS","req":{"id":34,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":52701},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050254833,"pid":20132,"hostname":"WLS","req":{"id":35,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62762},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050284838,"pid":20132,"hostname":"WLS","req":{"id":36,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":60781},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050314847,"pid":20132,"hostname":"WLS","req":{"id":37,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59432},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050344859,"pid":20132,"hostname":"WLS","req":{"id":38,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62295},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050374866,"pid":20132,"hostname":"WLS","req":{"id":39,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":60114},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050404883,"pid":20132,"hostname":"WLS","req":{"id":40,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":64900},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050434901,"pid":20132,"hostname":"WLS","req":{"id":41,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":56083},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050464918,"pid":20132,"hostname":"WLS","req":{"id":42,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":63873},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050494938,"pid":20132,"hostname":"WLS","req":{"id":43,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":64392},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050524950,"pid":20132,"hostname":"WLS","req":{"id":44,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":54669},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050554970,"pid":20132,"hostname":"WLS","req":{"id":45,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61727},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050584982,"pid":20132,"hostname":"WLS","req":{"id":46,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62880},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050614999,"pid":20132,"hostname":"WLS","req":{"id":47,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61674},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050645012,"pid":20132,"hostname":"WLS","req":{"id":48,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":60421},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050675031,"pid":20132,"hostname":"WLS","req":{"id":49,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":56451},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050705039,"pid":20132,"hostname":"WLS","req":{"id":50,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":57568},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050735050,"pid":20132,"hostname":"WLS","req":{"id":51,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":49987},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050765068,"pid":20132,"hostname":"WLS","req":{"id":52,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":55082},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+[2J[3J[H[[90m11:33:10 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:33:10 AM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m11:33:11 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:33:12 AM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m11:33:12 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:33:13 AM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m11:33:15 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:33:15 AM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m11:33:16 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:33:17 AM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m11:33:20 AM[0m] File change detected. Starting incremental compilation...
+
+{"level":30,"time":1789050800884,"pid":13088,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789050800885,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789050800886,"pid":13088,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[[90m11:33:21 AM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789050804880,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789050804881,"pid":12204,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+{"level":30,"time":1789050827433,"pid":12204,"hostname":"WLS","req":{"id":1,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61200},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":5,"msg":"request completed"}
+{"level":30,"time":1789050857441,"pid":12204,"hostname":"WLS","req":{"id":2,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":58394},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050887451,"pid":12204,"hostname":"WLS","req":{"id":3,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":56295},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050917460,"pid":12204,"hostname":"WLS","req":{"id":4,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61001},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789050947472,"pid":12204,"hostname":"WLS","req":{"id":5,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61452},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789050977485,"pid":12204,"hostname":"WLS","req":{"id":6,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":62629},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051007501,"pid":12204,"hostname":"WLS","req":{"id":7,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":53388},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051037523,"pid":12204,"hostname":"WLS","req":{"id":8,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":51200},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051067539,"pid":12204,"hostname":"WLS","req":{"id":9,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59765},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051097556,"pid":12204,"hostname":"WLS","req":{"id":10,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":57274},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051127562,"pid":12204,"hostname":"WLS","req":{"id":11,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":54078},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051157573,"pid":12204,"hostname":"WLS","req":{"id":12,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":61060},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051187588,"pid":12204,"hostname":"WLS","req":{"id":13,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59008},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051217607,"pid":12204,"hostname":"WLS","req":{"id":14,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":55586},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051247614,"pid":12204,"hostname":"WLS","req":{"id":15,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":49375},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051277633,"pid":12204,"hostname":"WLS","req":{"id":16,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":60996},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051307645,"pid":12204,"hostname":"WLS","req":{"id":17,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":52232},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051337666,"pid":12204,"hostname":"WLS","req":{"id":18,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":49603},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051367681,"pid":12204,"hostname":"WLS","req":{"id":19,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":52421},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051397699,"pid":12204,"hostname":"WLS","req":{"id":20,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":53250},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+{"level":30,"time":1789051427711,"pid":12204,"hostname":"WLS","req":{"id":21,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":53148},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":0,"msg":"request completed"}
+{"level":30,"time":1789051457727,"pid":12204,"hostname":"WLS","req":{"id":22,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":59550},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+[2J[3J[H[[90m11:44:34 AM[0m] File change detected. Starting incremental compilation...
+
+[[90m11:44:34 AM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789051478574,"pid":27136,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789051478575,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789051478576,"pid":27136,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+{"level":30,"time":1789051487753,"pid":27136,"hostname":"WLS","req":{"id":1,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":64095},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":5,"msg":"request completed"}
+{"level":30,"time":1789051517765,"pid":27136,"hostname":"WLS","req":{"id":2,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","connection":"keep-alive","sec-ch-ua-platform":"\"Windows\"","user-agent":"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Claude/1.49585.0 Chrome/152.0.7977.76 Safari/537.36 MSIX","sec-ch-ua":"\"Not?A_Brand\";v=\"24\", \"Chromium\";v=\"152\"","sec-ch-ua-mobile":"?0","accept":"*/*","origin":"http://localhost:3000","sec-fetch-site":"same-site","sec-fetch-mode":"cors","sec-fetch-dest":"empty","referer":"http://localhost:3000/","accept-encoding":"gzip, deflate, br, zstd","accept-language":"pt-BR","if-none-match":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""},"remoteAddress":"::1","remotePort":60471},"res":{"statusCode":304,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":1,"msg":"request completed"}
+[2J[3J[H[[90m1:13:15 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:13:16 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m1:13:16 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:13:18 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m1:13:18 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m1:13:19 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m1:13:22 PM[0m] File change detected. Starting incremental compilation...
+
+{"level":30,"time":1789056802893,"pid":14788,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789056802894,"pid":14788,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[[90m1:13:24 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789056807154,"pid":21796,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789056807155,"pid":21796,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m2:32:49 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m2:32:50 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m2:32:51 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m2:32:53 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m2:32:53 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m2:32:54 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m2:32:57 PM[0m] File change detected. Starting incremental compilation...
+
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789061577682,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789061577683,"pid":21620,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[[90m2:32:58 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m2:32:58 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m2:32:59 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789061583264,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789061583265,"pid":29264,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:30:31 PM[0m] File change detected. Starting incremental compilation...
+
+[2J[3J[H[[90m3:52:51 PM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                    ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m41[0m - [91merror[0m[90m TS7053: [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Readonly<Record<ErrorCode, ErrorDefinition>>'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m65[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                                                ~~~~~~~~~~~~~~~~~~[0m
+
+[[90m3:52:52 PM[0m] Found 3 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:52:52 PM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                    ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m41[0m - [91merror[0m[90m TS7053: [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Readonly<Record<ErrorCode, ErrorDefinition>>'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m65[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                                                ~~~~~~~~~~~~~~~~~~[0m
+
+[[90m3:52:52 PM[0m] Found 3 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:52:53 PM[0m] File change detected. Starting incremental compilation...
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                    ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m41[0m - [91merror[0m[90m TS7053: [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Readonly<Record<ErrorCode, ErrorDefinition>>'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                        ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/duplicate-provider-error.ts[0m:[93m6[0m:[93m65[0m - [91merror[0m[90m TS2339: [0mProperty 'PROVIDER_DUPLICATE' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.PROVIDER_DUPLICATE, ERROR_CATALOG[ErrorCode.PROVIDER_DUPLICATE], { provider });
+[7m [0m [91m                                                                ~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/rate-limit-not-configured-error.ts[0m:[93m6[0m:[93m21[0m - [91merror[0m[90m TS2339: [0mProperty 'RATE_LIMIT_NOT_CONFIGURED' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.RATE_LIMIT_NOT_CONFIGURED, ERROR_CATALOG[ErrorCode.RATE_LIMIT_NOT_CONFIGURED], {
+[7m [0m [91m                    ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/rate-limit-not-configured-error.ts[0m:[93m6[0m:[93m48[0m - [91merror[0m[90m TS7053: [0mElement implicitly has an 'any' type because expression of type 'any' can't be used to index type 'Readonly<Record<ErrorCode, ErrorDefinition>>'.
+
+[7m6[0m     super(ErrorCode.RATE_LIMIT_NOT_CONFIGURED, ERROR_CATALOG[ErrorCode.RATE_LIMIT_NOT_CONFIGURED], {
+[7m [0m [91m                                               ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[96msrc/common/errors/rate-limit-not-configured-error.ts[0m:[93m6[0m:[93m72[0m - [91merror[0m[90m TS2339: [0mProperty 'RATE_LIMIT_NOT_CONFIGURED' does not exist on type 'typeof ErrorCode'.
+
+[7m6[0m     super(ErrorCode.RATE_LIMIT_NOT_CONFIGURED, ERROR_CATALOG[ErrorCode.RATE_LIMIT_NOT_CONFIGURED], {
+[7m [0m [91m                                                                       ~~~~~~~~~~~~~~~~~~~~~~~~~[0m
+
+[[90m3:52:54 PM[0m] Found 6 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:47 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:48 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:49 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:49 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:50 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:51 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:51 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:52 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:54 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:55 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:55 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:56 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:54:59 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:54:59 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:55:00 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:55:00 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066504458,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066504459,"pid":14424,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:55:04 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:55:05 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066508579,"pid":9088,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066508580,"pid":9088,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:55:08 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:55:09 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066512667,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066512668,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066512669,"pid":33948,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066512669,"pid":33948,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066512669,"pid":33948,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:55:17 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:55:17 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066521391,"pid":34284,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066521392,"pid":34284,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:56:14 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:56:15 PM[0m] Found 0 errors. Watching for file changes.
+
+[2J[3J[H[[90m3:56:21 PM[0m] File change detected. Starting incremental compilation...
+
+{"level":30,"time":1789066581951,"pid":20212,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066581953,"pid":20212,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066581954,"pid":20212,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[[90m3:56:22 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066587056,"pid":20844,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+[2J[3J[H[[90m3:56:43 PM[0m] File change detected. Starting incremental compilation...
+
+[[90m3:56:47 PM[0m] Found 0 errors. Watching for file changes.
+
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"NestFactory","msg":"Starting Nest application..."}
+--------------------------------------------------------------
+SMS Notification Microservice started successfully
+--------------------------------------------------------------
+Environment : development
+Application : http://localhost:3001
+Public URL  : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app
+Swagger     : http://localhost:3001/api/docs
+Health      : http://localhost:3001/api/health
+
+Webhooks (local)
+Twilio      : http://localhost:3001/api/v1/webhooks/twilio
+Bird        : http://localhost:3001/api/v1/webhooks/bird
+
+Webhooks (public, as the providers reach them)
+Twilio      : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/twilio
+Bird        : https://0199-2804-40a8-11f-c600-1501-8dbe-2595-c7ab.ngrok-free.app/api/v1/webhooks/bird
+--------------------------------------------------------------
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"DatabaseModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigHostModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"HealthModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"DiscoveryModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"ConfigModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"LoggerModule dependencies initialized"}
+{"level":30,"time":1789066613565,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"AppModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"IdempotencyModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"BullModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"ProvidersModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"QueueModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmCoreModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"TypeOrmModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"WebhooksModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"InstanceLoader","msg":"SmsModule dependencies initialized"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RoutesResolver","msg":"SmsController {/api/sms} (version: 1):"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/send, POST} (version: 1) route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/sms/:messageId, GET} (version: 1) route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RoutesResolver","msg":"AdminSmsController {/api/admin/sms} (version: 1):"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/admin/sms/:messageId/requeue, POST} (version: 1) route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RoutesResolver","msg":"TwilioWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/twilio, POST} (version: 1) route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RoutesResolver","msg":"BirdWebhookController {/api/webhooks} (version: 1):"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/webhooks/bird, POST} (version: 1) route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RoutesResolver","msg":"HealthController {/api/health}:"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"RouterExplorer","msg":"Mapped {/api/health, GET} route"}
+{"level":30,"time":1789066613566,"pid":14240,"hostname":"WLS","context":"NestApplication","msg":"Nest application successfully started"}
+{"level":30,"time":1789066617185,"pid":14240,"hostname":"WLS","req":{"id":1,"method":"GET","url":"/api/health","query":{},"params":{"splat":["health"]},"headers":{"host":"localhost:3001","user-agent":"curl/8.11.0","accept":"*/*"},"remoteAddress":"::1","remotePort":57975},"res":{"statusCode":200,"headers":{"x-powered-by":"Express","access-control-allow-origin":"http://localhost:3000","vary":"Origin","content-type":"application/json; charset=utf-8","content-length":"15","etag":"W/\"f-VaSQ4oDUiZblZNAEkkN+sX+q3Sg\""}},"responseTime":7,"msg":"request completed"}

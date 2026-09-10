@@ -1,4 +1,5 @@
 import { AppError, ErrorDetails } from './app-error';
+import { DuplicateProviderError } from './duplicate-provider-error';
 import { ERROR_CATALOG, ErrorCode } from './error-catalog';
 import { IdempotencyConflictError } from './idempotency-conflict-error';
 import { IdempotencyKeyRequiredError } from './idempotency-key-required-error';
@@ -13,6 +14,7 @@ import { NoProviderConfiguredError } from './no-provider-configured-error';
 import { ProviderNotRegisteredError } from './provider-not-registered-error';
 import { ProviderPriorityEmptyError } from './provider-priority-empty-error';
 import { QueuePublishFailedError } from './queue-publish-failed-error';
+import { RateLimitNotConfiguredError } from './rate-limit-not-configured-error';
 import { RateLimitStoreInvalidResponseError } from './rate-limit-store-invalid-response-error';
 import { RequeueConflictError } from './requeue-conflict-error';
 import { RequeueNotEligibleError } from './requeue-not-eligible-error';
@@ -59,8 +61,18 @@ const CASES: ErrorCase[] = [
     details: { provider: 'bird' },
   },
   {
+    error: new DuplicateProviderError('twilio'),
+    code: ErrorCode.PROVIDER_DUPLICATE,
+    details: { provider: 'twilio' },
+  },
+  {
     error: new RateLimitStoreInvalidResponseError(),
     code: ErrorCode.RATE_LIMIT_STORE_INVALID_RESPONSE,
+  },
+  {
+    error: new RateLimitNotConfiguredError('bird'),
+    code: ErrorCode.RATE_LIMIT_NOT_CONFIGURED,
+    details: { provider: 'bird' },
   },
   {
     error: new InvalidRetryConfigurationError('attempt', 0),

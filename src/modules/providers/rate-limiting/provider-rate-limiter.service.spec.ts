@@ -1,12 +1,13 @@
 import { ConfigService } from '@nestjs/config';
 
-import { UnknownProviderError } from '../../../common/errors/unknown-provider-error';
+import { RateLimitNotConfiguredError } from '../../../common/errors/rate-limit-not-configured-error';
+import { ProviderRegistryService } from '../provider-registry.service';
 import { RateLimitCounterStore } from './rate-limit-counter-store.interface';
 import { ProviderRateLimiterService } from './provider-rate-limiter.service';
 
 describe('ProviderRateLimiterService', () => {
   it('reads provider-specific rate limit configuration', () => {
-    const service = new ProviderRateLimiterService(buildConfigService(), buildCounterStore());
+    const service = buildService();
 
     expect(service.getLimitConfig('twilio')).toEqual({
       max: 7,
@@ -18,9 +19,18 @@ describe('ProviderRateLimiterService', () => {
     });
   });
 
+  it('reads the limits of any provider from its own configuration block', () => {
+    const service = buildService();
+
+    expect(service.getLimitConfig('example')).toEqual({
+      max: 5,
+      durationMs: 1000,
+    });
+  });
+
   it('allows calls within the configured provider window without sleeping', async () => {
     const counterStore = buildCounterStore([{ count: 1, ttlMs: 1000 }]);
-    const service = new ProviderRateLimiterService(buildConfigService(), counterStore);
+    const service = buildService(counterStore);
 
     await service.throttle('twilio');
 
@@ -36,7 +46,7 @@ describe('ProviderRateLimiterService', () => {
       { count: 8, ttlMs: 5 },
       { count: 1, ttlMs: 1500 },
     ]);
-    const service = new ProviderRateLimiterService(buildConfigService(), counterStore);
+    const service = buildService(counterStore);
 
     const startedAt = Date.now();
     await service.throttle('twilio');
@@ -50,7 +60,7 @@ describe('ProviderRateLimiterService', () => {
       { count: 1, ttlMs: 1000 },
       { count: 1, ttlMs: 1000 },
     ]);
-    const service = new ProviderRateLimiterService(buildConfigService(), counterStore);
+    const service = buildService(counterStore);
 
     await service.throttle('twilio');
     await service.throttle('bird');
@@ -67,11 +77,42 @@ describe('ProviderRateLimiterService', () => {
     );
   });
 
-  it('rejects an unknown provider instead of silently skipping the limit', () => {
-    const service = new ProviderRateLimiterService(buildConfigService(), buildCounterStore());
+  it('rejects a provider without limits instead of silently skipping the limit', () => {
+    const service = buildService();
 
-    expect(() => service.getLimitConfig('vonage')).toThrow(UnknownProviderError);
+    expect(() => service.getLimitConfig('vonage')).toThrow(RateLimitNotConfiguredError);
   });
+
+  it('rejects limits that are not positive integers', () => {
+    const service = buildService();
+
+    expect(() => service.getLimitConfig('broken')).toThrow(RateLimitNotConfiguredError);
+  });
+
+  it('starts when every configured provider has limits', () => {
+    const service = buildService(buildCounterStore(), ['twilio', 'bird', 'example']);
+
+    expect(() => service.onModuleInit()).not.toThrow();
+  });
+
+  it('fails at startup when a configured provider has no limits', () => {
+    const counterStore = buildCounterStore();
+    const service = buildService(counterStore, ['twilio', 'vonage']);
+
+    expect(() => service.onModuleInit()).toThrow(RateLimitNotConfiguredError);
+    expect(counterStore.increment).not.toHaveBeenCalled();
+  });
+
+  function buildService(
+    counterStore = buildCounterStore(),
+    configuredProviders = ['twilio', 'bird'],
+  ): ProviderRateLimiterService {
+    const providerRegistry = {
+      getConfiguredProviderNames: () => configuredProviders,
+    } as unknown as ProviderRegistryService;
+
+    return new ProviderRateLimiterService(buildConfigService(), counterStore, providerRegistry);
+  }
 
   function buildConfigService(): ConfigService {
     const values = new Map<string, number>([
@@ -79,10 +120,14 @@ describe('ProviderRateLimiterService', () => {
       ['providers.twilio.rateLimitDurationMs', 1500],
       ['providers.bird.rateLimitMax', 3],
       ['providers.bird.rateLimitDurationMs', 2500],
+      ['providers.example.rateLimitMax', 5],
+      ['providers.example.rateLimitDurationMs', 1000],
+      ['providers.broken.rateLimitMax', 0],
+      ['providers.broken.rateLimitDurationMs', 1000],
     ]);
 
     return {
-      getOrThrow: (key: string) => values.get(key),
+      get: (key: string) => values.get(key),
     } as ConfigService;
   }
 

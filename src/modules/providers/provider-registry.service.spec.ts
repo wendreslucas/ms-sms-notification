@@ -1,29 +1,32 @@
 import { ConfigService } from '@nestjs/config';
 
+import { DuplicateProviderError } from '../../common/errors/duplicate-provider-error';
 import { ProviderPriorityEmptyError } from '../../common/errors/provider-priority-empty-error';
 import { UnknownProviderError } from '../../common/errors/unknown-provider-error';
 import { ISmsProvider } from './interfaces/sms-provider.interface';
 import { ProviderRegistryService } from './provider-registry.service';
 import { SmsProviderName } from './sms-provider-name.enum';
-import { BirdProvider } from './strategies/bird.provider';
-import { TwilioProvider } from './strategies/twilio.provider';
 
-function buildProvider(providerName: SmsProviderName): ISmsProvider {
+const BUILT_IN_PROVIDERS: string[] = [SmsProviderName.TWILIO, SmsProviderName.BIRD];
+
+function buildProvider(providerName: string): ISmsProvider {
   return {
     providerName,
     sendSms: jest.fn(),
   };
 }
 
-function buildRegistry(priority: string): ProviderRegistryService {
+function buildRegistry(
+  priority: string,
+  providerNames: string[] = BUILT_IN_PROVIDERS,
+): ProviderRegistryService {
   const configService = {
     getOrThrow: () => priority,
   } as unknown as ConfigService;
 
   return new ProviderRegistryService(
     configService,
-    buildProvider(SmsProviderName.TWILIO) as TwilioProvider,
-    buildProvider(SmsProviderName.BIRD) as BirdProvider,
+    providerNames.map((providerName) => buildProvider(providerName)),
   );
 }
 
@@ -50,6 +53,17 @@ describe('ProviderRegistryService', () => {
     expect(registry.getPrimaryProvider().providerName).toBe(SmsProviderName.BIRD);
   });
 
+  it('resolves a newly registered provider by its own name, with no change to the registry', () => {
+    const registry = buildRegistry('example,twilio', [...BUILT_IN_PROVIDERS, 'example']);
+    registry.onModuleInit();
+
+    expect(registry.getProviders().map((provider) => provider.providerName)).toEqual([
+      'example',
+      SmsProviderName.TWILIO,
+    ]);
+    expect(registry.getPrimaryProvider().providerName).toBe('example');
+  });
+
   it('rejects unknown providers', () => {
     const registry = buildRegistry('foo,twilio');
 
@@ -60,5 +74,11 @@ describe('ProviderRegistryService', () => {
     const registry = buildRegistry(' , ');
 
     expect(() => registry.onModuleInit()).toThrow(ProviderPriorityEmptyError);
+  });
+
+  it('rejects two providers registered under the same name', () => {
+    expect(() => buildRegistry('twilio', [SmsProviderName.TWILIO, SmsProviderName.TWILIO])).toThrow(
+      DuplicateProviderError,
+    );
   });
 });
