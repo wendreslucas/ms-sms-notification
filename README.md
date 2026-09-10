@@ -686,6 +686,8 @@ npm run migration:run
 npm run start:dev
 ```
 
+npm is the expected package manager; `package-lock.json` is the lockfile this repository tracks.
+
 The default host ports are `5433` for PostgreSQL and `6380` for Redis to avoid collisions with common local installations. The containers still use their standard internal ports.
 
 The API runs on:
@@ -727,6 +729,7 @@ http://localhost:3000/api/docs
 ```http
 GET /api/health
 POST /api/v1/sms/send
+GET /api/v1/sms/{messageId}
 POST /api/v1/admin/sms/{messageId}/requeue
 POST /api/v1/webhooks/twilio
 POST /api/v1/webhooks/bird
@@ -743,6 +746,10 @@ X-Idempotency-Key
 `POST /api/v1/admin/sms/{messageId}/requeue` explicitly requeues a `FATAL_FAILURE` message. It returns `202 Accepted` on success, `404 Not Found` for unknown ids, and `409 Conflict` when the message is not eligible.
 
 The two webhook routes are provider callbacks, not endpoints for API consumers. See [Delivery Webhooks](#delivery-webhooks).
+
+`GET /api/v1/sms/{messageId}` reads the current tracking state of a message: status, attempts, selected provider, external id and the lifecycle timestamps. It is a small addition for tracking and demonstration, such as an optional frontend, and is not part of the send flow.
+
+It returns tracking data only. The recipient number, the message body, the metadata and the idempotency key are never exposed. A malformed id returns `400 Bad Request` without touching the database, and an id that matches no message returns `404 Not Found`.
 
 ## Tests
 

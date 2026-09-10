@@ -1,10 +1,22 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Param,
+  ParseUUIDPipe,
+  Post,
+} from '@nestjs/common';
 import {
   ApiAcceptedResponse,
   ApiBadRequestResponse,
   ApiHeader,
   ApiInternalServerErrorResponse,
+  ApiNotFoundResponse,
+  ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
 
@@ -12,6 +24,7 @@ import { IDEMPOTENCY_KEY_HEADER } from '../../../config/constants';
 import { IdempotencyKey } from '../decorators/idempotency-key.decorator';
 import { SendSmsDto } from '../dto/send-sms.dto';
 import { SendSmsResponseDto } from '../dto/send-sms-response.dto';
+import { SmsStatusResponseDto } from '../dto/sms-status-response.dto';
 import { SmsService } from '../services/sms.service';
 
 @ApiTags('sms')
@@ -51,5 +64,28 @@ export class SmsController {
     @Body() dto: SendSmsDto,
   ): Promise<SendSmsResponseDto> {
     return this.smsService.sendSmsRequest(idempotencyKey, dto);
+  }
+
+  @Get(':messageId')
+  @ApiOperation({
+    summary: 'Read the tracking status of an SMS',
+    description:
+      'Returns the current delivery state of a message. It reports tracking fields only: the recipient, the message body, the metadata and the idempotency key are never exposed. This endpoint is an addition for tracking and demonstration purposes and is not part of the send flow.',
+  })
+  @ApiParam({
+    name: 'messageId',
+    description: 'SMS message id returned when the request was accepted.',
+    example: 'c8d488e9-f308-43e8-8db9-8df0cb5134ef',
+  })
+  @ApiOkResponse({
+    description: 'Current tracking state of the message.',
+    type: SmsStatusResponseDto,
+  })
+  @ApiBadRequestResponse({ description: 'messageId is not a valid UUID.' })
+  @ApiNotFoundResponse({ description: 'SMS message was not found.' })
+  async getStatus(
+    @Param('messageId', new ParseUUIDPipe({ version: '4' })) messageId: string,
+  ): Promise<SmsStatusResponseDto> {
+    return this.smsService.getMessageStatus(messageId);
   }
 }

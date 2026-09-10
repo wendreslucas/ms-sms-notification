@@ -18,10 +18,16 @@ export class SendSmsDto {
 
   @ApiProperty({
     example: 'Your verification code is 482019',
-    description: 'SMS message body. The maximum length is configured by SMS_MAX_MESSAGE_LENGTH.',
+    description:
+      'SMS message body. It must contain at least one non-whitespace character, and its maximum length is configured by SMS_MAX_MESSAGE_LENGTH.',
   })
   @IsString()
   @IsNotEmpty()
+  // Requires real content without rewriting the payload: a body of only spaces
+  // or tabs is rejected, while the text that is sent stays exactly as supplied.
+  @Matches(/\S/, {
+    message: 'message must contain at least one non-whitespace character.',
+  })
   message: string;
 
   @ApiPropertyOptional({

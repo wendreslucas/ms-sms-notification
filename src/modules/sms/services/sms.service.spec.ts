@@ -245,6 +245,73 @@ describe('SmsService', () => {
     });
   });
 
+  it('returns only tracking fields for an existing message', async () => {
+    repository.findOne.mockResolvedValue(
+      buildMessage({
+        status: SmsStatus.SENT,
+        attempts: 4,
+        selectedProvider: 'bird',
+        providerMessageId: 'external-id',
+        sentAt: new Date('2026-08-05T21:30:02.000Z'),
+      }),
+    );
+
+    const response = await service.getMessageStatus('c8d488e9-f308-43e8-8df0cb5134ef');
+
+    expect(response).toEqual({
+      status: 'success',
+      data: {
+        messageId: 'c8d488e9-f308-43e8-8df0cb5134ef',
+        status: SmsStatus.SENT,
+        attempts: 4,
+        selectedProvider: 'bird',
+        providerMessageId: 'external-id',
+        createdAt: '2026-08-05T21:30:00.000Z',
+        sentAt: '2026-08-05T21:30:02.000Z',
+        deliveredAt: null,
+        failedAt: null,
+      },
+    });
+  });
+
+  it('never exposes the recipient, the body, the metadata or the idempotency key', async () => {
+    repository.findOne.mockResolvedValue(buildMessage({ status: SmsStatus.DELIVERED }));
+
+    const response = await service.getMessageStatus('c8d488e9-f308-43e8-8df0cb5134ef');
+    const serialized = JSON.stringify(response);
+
+    for (const field of ['recipientPhone', 'messageBody', 'metadata', 'idempotencyKey']) {
+      expect(response.data).not.toHaveProperty(field);
+    }
+    expect(serialized).not.toContain('+14155552671');
+    expect(serialized).not.toContain('Your verification code is 482019');
+    expect(serialized).not.toContain('idem-key');
+    expect(serialized).not.toContain('usr_123456');
+  });
+
+  it('reports unset timestamps as null rather than omitting them', async () => {
+    repository.findOne.mockResolvedValue(buildMessage({ status: SmsStatus.QUEUED }));
+
+    const response = await service.getMessageStatus('c8d488e9-f308-43e8-8df0cb5134ef');
+
+    expect(response.data).toMatchObject({
+      status: SmsStatus.QUEUED,
+      selectedProvider: null,
+      providerMessageId: null,
+      sentAt: null,
+      deliveredAt: null,
+      failedAt: null,
+    });
+  });
+
+  it('rejects a status lookup when the message does not exist', async () => {
+    repository.findOne.mockResolvedValue(null);
+
+    await expect(
+      service.getMessageStatus('c8d488e9-f308-43e8-8df0cb5134ef'),
+    ).rejects.toBeInstanceOf(NotFoundException);
+  });
+
   it('rejects requeue when the message does not exist', async () => {
     repository.findOne.mockResolvedValue(null);
 

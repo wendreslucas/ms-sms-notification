@@ -19,6 +19,7 @@ import { QueueService } from '../../queue/queue.service';
 import { SendSmsDto } from '../dto/send-sms.dto';
 import { SendSmsResponseDto } from '../dto/send-sms-response.dto';
 import { RequeueSmsResponseDto } from '../dto/requeue-sms-response.dto';
+import { SmsStatusResponseDto } from '../dto/sms-status-response.dto';
 import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
 
@@ -232,6 +233,35 @@ export class SmsService implements OnModuleInit {
     const updateResult = await queryBuilder.execute();
 
     return (updateResult.affected ?? 0) > 0;
+  }
+
+  /**
+   * Tracking view of a single message, reusing the existing lookup.
+   *
+   * Only status fields are exposed; the recipient, the body, the metadata and
+   * the idempotency key never leave the service.
+   */
+  async getMessageStatus(messageId: string): Promise<SmsStatusResponseDto> {
+    const message = await this.findById(messageId);
+
+    if (!message) {
+      throw new NotFoundException(`SMS message "${messageId}" was not found.`);
+    }
+
+    return {
+      status: 'success',
+      data: {
+        messageId: message.id,
+        status: message.status,
+        attempts: message.attempts,
+        selectedProvider: message.selectedProvider,
+        providerMessageId: message.providerMessageId,
+        createdAt: message.createdAt.toISOString(),
+        sentAt: message.sentAt?.toISOString() ?? null,
+        deliveredAt: message.deliveredAt?.toISOString() ?? null,
+        failedAt: message.failedAt?.toISOString() ?? null,
+      },
+    };
   }
 
   async findById(messageId: string): Promise<SmsMessage | null> {

@@ -57,6 +57,35 @@ describe('SendSmsDto', () => {
     expect(errors[0].property).toBe('to');
   });
 
+  it.each([
+    ['empty', ''],
+    ['a single space', ' '],
+    ['several spaces', '     '],
+    ['a tab and a newline', '\t\n'],
+    ['mixed whitespace', ' \t \n '],
+  ])('rejects a message that is %s', async (_label, message) => {
+    const errors = await validate(plainToInstance(SendSmsDto, { to: '+14155552671', message }));
+
+    expect(errors.length).toBeGreaterThan(0);
+    expect(JSON.stringify(errors)).toContain('message');
+  });
+
+  it('keeps a message whose padding surrounds real content', async () => {
+    const errors = await validate(
+      plainToInstance(SendSmsDto, { to: '+14155552671', message: '  hello  ' }),
+    );
+
+    expect(errors).toHaveLength(0);
+  });
+
+  it('does not rewrite the message that was supplied', async () => {
+    const dto = plainToInstance(SendSmsDto, { to: '+14155552671', message: '  hello  ' });
+
+    await validate(dto);
+
+    expect(dto.message).toBe('  hello  ');
+  });
+
   it('rejects an empty message', async () => {
     const errors = await validatePayload({
       to: '+14155552671',

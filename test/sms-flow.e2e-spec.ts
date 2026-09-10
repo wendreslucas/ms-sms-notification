@@ -361,6 +361,118 @@ describe('SMS send flow (e2e)', () => {
     }
   });
 
+  describe('GET /api/v1/sms/:messageId', () => {
+    it('reports a queued message that has not been picked up yet', async () => {
+      // Created directly so the assertion cannot race the worker; the accepted
+      // POST response is covered by the send-flow tests above.
+      const message = await createMessage({ status: SmsStatus.QUEUED, attempts: 0 });
+
+      const response = await request(app.getHttpServer())
+        .get(`/api/v1/sms/${message.id}`)
+        .expect(200);
+
+      expect(response.body).toEqual({
+        status: 'success',
+        data: {
+          messageId: message.id,
+          status: SmsStatus.QUEUED,
+          attempts: 0,
+          selectedProvider: null,
+          providerMessageId: null,
+          createdAt: expect.any(String),
+          sentAt: null,
+          deliveredAt: null,
+          failedAt: null,
+        },
+      });
+    });
+
+    it('reports a sent message with its provider and attempt count', async () => {
+      const message = await createMessage({
+        status: SmsStatus.SENT,
+        attempts: 4,
+        selectedProvider: SmsProviderName.BIRD,
+        providerMessageId: 'external-id',
+        sentAt: new Date('2026-08-05T21:30:02.000Z'),
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(`/api/v1/sms/${message.id}`)
+        .expect(200);
+
+      expect(response.body.data).toMatchObject({
+        status: SmsStatus.SENT,
+        attempts: 4,
+        selectedProvider: SmsProviderName.BIRD,
+        providerMessageId: 'external-id',
+        sentAt: '2026-08-05T21:30:02.000Z',
+        deliveredAt: null,
+      });
+    });
+
+    it('reports a delivered message with its delivery timestamp', async () => {
+      const message = await createMessage({
+        status: SmsStatus.DELIVERED,
+        attempts: 1,
+        selectedProvider: SmsProviderName.TWILIO,
+        providerMessageId: 'SM123',
+        sentAt: new Date('2026-08-05T21:30:02.000Z'),
+        deliveredAt: new Date('2026-08-05T21:30:07.000Z'),
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(`/api/v1/sms/${message.id}`)
+        .expect(200);
+
+      expect(response.body.data).toMatchObject({
+        status: SmsStatus.DELIVERED,
+        deliveredAt: '2026-08-05T21:30:07.000Z',
+      });
+    });
+
+    it('returns 404 for a message that does not exist', async () => {
+      await request(app.getHttpServer()).get(`/api/v1/sms/${randomUUID()}`).expect(404);
+    });
+
+    it.each(['not-a-uuid', '123', 'c8d488e9-f308-43e8-8db9'])(
+      'returns 400 for the malformed id %s',
+      async (messageId) => {
+        await request(app.getHttpServer()).get(`/api/v1/sms/${messageId}`).expect(400);
+      },
+    );
+
+    it('never exposes the recipient, the body, the metadata or the idempotency key', async () => {
+      const message = await createMessage({
+        status: SmsStatus.SENT,
+        selectedProvider: SmsProviderName.TWILIO,
+        providerMessageId: 'SM123',
+      });
+
+      const response = await request(app.getHttpServer())
+        .get(`/api/v1/sms/${message.id}`)
+        .expect(200);
+
+      for (const field of ['recipientPhone', 'messageBody', 'metadata', 'idempotencyKey']) {
+        expect(response.body.data).not.toHaveProperty(field);
+      }
+
+      const serialized = JSON.stringify(response.body);
+      expect(serialized).not.toContain('14155552671');
+      expect(serialized).not.toContain('482019');
+      expect(serialized).not.toContain(message.idempotencyKey);
+    });
+  });
+
+  it.each([' ', '     '])('rejects a message made only of whitespace', async (message) => {
+    await request(app.getHttpServer())
+      .post('/api/v1/sms/send')
+      .set('X-Idempotency-Key', `e2e-whitespace-${message.length}`)
+      .send({ to: '+14155552671', message })
+      .expect(400);
+
+    await expect(repository.count()).resolves.toBe(0);
+  });
+
   it('rejects an invalid phone number', async () => {
     await request(app.getHttpServer())
       .post('/api/v1/sms/send')
