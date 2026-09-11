@@ -9,6 +9,10 @@ import { calculateExponentialBackoff } from '../../../common/utils/retry.util';
 import { ISmsProvider, SendSmsResult } from '../../providers/interfaces/sms-provider.interface';
 import { ProviderRegistryService } from '../../providers/provider-registry.service';
 import { ProviderRateLimiterService } from '../../providers/rate-limiting/provider-rate-limiter.service';
+import {
+  SmsProviderException,
+  toSendSmsFailureResult,
+} from '../../providers/sms-provider.exception';
 import { QueueService } from '../../queue/queue.service';
 import { SmsMessage } from '../entities/sms-message.entity';
 import { SmsStatus } from '../entities/sms-status.enum';
@@ -159,6 +163,15 @@ export class SmsDispatcherService implements OnModuleInit {
 
         lastError = result.error ?? 'SMS provider returned an unsuccessful response.';
 
+        this.logProviderFailed({
+          message,
+          provider,
+          result,
+          providerAttempt,
+          totalAttempts,
+          error: lastError,
+        });
+
         if (!result.isRetryable || providerAttempt >= maxAttemptsPerProvider) {
           break;
         }
@@ -251,6 +264,10 @@ export class SmsDispatcherService implements OnModuleInit {
         referenceId: message.id,
       });
     } catch (error) {
+      if (error instanceof SmsProviderException) {
+        return toSendSmsFailureResult(error);
+      }
+
       return {
         success: false,
         error:
@@ -258,8 +275,38 @@ export class SmsDispatcherService implements OnModuleInit {
             ? error.message
             : `Provider ${provider.providerName} threw an error.`,
         isRetryable: true,
+        provider: provider.providerName,
       };
     }
+  }
+
+  private logProviderFailed(params: {
+    message: SmsMessage;
+    provider: ISmsProvider;
+    result: SendSmsResult;
+    providerAttempt: number;
+    totalAttempts: number;
+    error: string;
+  }): void {
+    this.logger.warn(
+      {
+        event: LogEvent.PROVIDER_FAILED,
+        messageId: params.message.id,
+        provider: params.provider.providerName,
+        providerAttempt: params.providerAttempt,
+        totalAttempts: params.totalAttempts,
+        retryable: params.result.isRetryable,
+        error: params.error,
+        ...(params.result.providerCode !== undefined
+          ? { providerCode: params.result.providerCode }
+          : {}),
+        ...(params.result.httpStatus !== undefined ? { httpStatus: params.result.httpStatus } : {}),
+        ...(params.result.providerMetadata !== undefined
+          ? { providerMetadata: params.result.providerMetadata }
+          : {}),
+      },
+      'SMS provider send failed',
+    );
   }
 
   private async sleep(milliseconds: number): Promise<void> {

@@ -7,9 +7,13 @@ export interface SendSmsOptions {
 export interface SendSmsResult {
   success: boolean;
   providerMessageId?: string;
+  provider?: string;
+  providerCode?: string | number;
+  httpStatus?: number;
   error?: string;
   isRetryable: boolean;
   retryAfterMs?: number;
+  providerMetadata?: Record<string, unknown>;
 }
 
 export interface ISmsProvider {

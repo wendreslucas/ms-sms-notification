@@ -87,6 +87,30 @@ describe('BirdProvider', () => {
     expect(result.retryAfterMs).toBe(10_000);
   });
 
+  it('preserves Bird diagnostic fields when available', async () => {
+    const provider = buildProviderWithError(
+      Object.assign(new Error('invalid recipient'), {
+        code: 'destination_not_allowed',
+        statusCode: 403,
+      }),
+    );
+
+    const result = await provider.sendSms({
+      to: '+14155552671',
+      body: 'hello',
+      referenceId: 'message-id',
+    });
+
+    expect(result).toMatchObject({
+      success: false,
+      provider: SmsProviderName.BIRD,
+      providerCode: 'destination_not_allowed',
+      httpStatus: 403,
+      error: 'invalid recipient',
+      isRetryable: false,
+    });
+  });
+
   it('classifies permanent provider errors as non-retryable', async () => {
     const provider = buildProviderWithError(
       Object.assign(new Error('bad request'), { statusCode: 400 }),
@@ -115,6 +139,7 @@ describe('BirdProvider', () => {
     expect(factory).not.toHaveBeenCalled();
     expect(result).toEqual({
       success: false,
+      provider: SmsProviderName.BIRD,
       error: 'Bird configuration is incomplete.',
       isRetryable: false,
     });

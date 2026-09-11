@@ -1,3 +1,7 @@
+import { maskPhoneNumber } from '../../common/utils/mask-phone-number';
+import { SmsProviderException } from './sms-provider.exception';
+import { SmsProviderName } from './sms-provider-name.enum';
+
 const RETRYABLE_STATUS_CODES = new Set([429, 500, 502, 503, 504]);
 const RETRYABLE_ERROR_CODES = new Set(['ECONNRESET', 'ETIMEDOUT', 'ECONNABORTED', 'ENOTFOUND']);
 const BIRD_NON_RETRYABLE_ERROR_NAMES = new Set([
@@ -12,55 +16,63 @@ const BIRD_RETRYABLE_ERROR_NAMES = new Set([
   'BirdRateLimitError',
 ]);
 
-export interface NormalizedProviderError {
-  message: string;
-  isRetryable: boolean;
-  retryAfterMs?: number;
-}
+export function normalizeTwilioError(error: unknown): SmsProviderException {
+  const httpStatus = getNumericProperty(error, 'status') ?? getNumericProperty(error, 'statusCode');
+  const providerCode = getProviderCode(error, 'code');
+  const moreInfo = getStringProperty(error, 'moreInfo');
 
-export function normalizeTwilioError(error: unknown): NormalizedProviderError {
-  const statusCode = getNumericProperty(error, 'status');
-  const code = getStringProperty(error, 'code');
-
-  return {
+  return new SmsProviderException({
+    provider: SmsProviderName.TWILIO,
+    providerCode,
     message: sanitizeErrorMessage(error),
-    isRetryable: isRetryableTransportError(code, statusCode),
+    httpStatus,
+    retryable: isRetryableTransportError(getRetryableErrorCode(providerCode), httpStatus),
     retryAfterMs: extractRetryAfterMs(error),
-  };
+    ...(moreInfo ? { providerMetadata: { moreInfo } } : {}),
+  });
 }
 
-export function normalizeBirdError(error: unknown): NormalizedProviderError {
+export function normalizeBirdError(error: unknown): SmsProviderException {
   const errorName = getErrorName(error);
 
   if (errorName && BIRD_RETRYABLE_ERROR_NAMES.has(errorName)) {
-    return {
+    return new SmsProviderException({
+      provider: SmsProviderName.BIRD,
+      providerCode: getProviderCode(error, 'code'),
       message: sanitizeErrorMessage(error),
-      isRetryable: true,
+      httpStatus: getNumericProperty(error, 'statusCode') ?? getNumericProperty(error, 'status'),
+      retryable: true,
       retryAfterMs: extractRetryAfterMs(error),
-    };
+    });
   }
 
   if (errorName && BIRD_NON_RETRYABLE_ERROR_NAMES.has(errorName)) {
-    return {
+    return new SmsProviderException({
+      provider: SmsProviderName.BIRD,
+      providerCode: getProviderCode(error, 'code'),
       message: sanitizeErrorMessage(error),
-      isRetryable: false,
+      httpStatus: getNumericProperty(error, 'statusCode') ?? getNumericProperty(error, 'status'),
+      retryable: false,
       retryAfterMs: extractRetryAfterMs(error),
-    };
+    });
   }
 
-  const statusCode = getNumericProperty(error, 'statusCode');
-  const code = getStringProperty(error, 'code');
+  const httpStatus = getNumericProperty(error, 'statusCode') ?? getNumericProperty(error, 'status');
+  const providerCode = getProviderCode(error, 'code');
 
-  return {
+  return new SmsProviderException({
+    provider: SmsProviderName.BIRD,
+    providerCode,
     message: sanitizeErrorMessage(error),
-    isRetryable: isRetryableTransportError(code, statusCode),
+    httpStatus,
+    retryable: isRetryableTransportError(getRetryableErrorCode(providerCode), httpStatus),
     retryAfterMs: extractRetryAfterMs(error),
-  };
+  });
 }
 
 export function sanitizeErrorMessage(error: unknown): string {
   if (error instanceof Error && error.message.trim().length > 0) {
-    return error.message;
+    return sanitizeSensitiveText(error.message);
   }
 
   return 'Provider request failed.';
@@ -95,6 +107,22 @@ function getStringProperty(value: unknown, propertyName: string): string | undef
   const propertyValue = value[propertyName];
 
   return typeof propertyValue === 'string' ? propertyValue : undefined;
+}
+
+function getProviderCode(value: unknown, propertyName: string): string | number | undefined {
+  if (!isRecord(value)) {
+    return undefined;
+  }
+
+  const propertyValue = value[propertyName];
+
+  return typeof propertyValue === 'string' || typeof propertyValue === 'number'
+    ? propertyValue
+    : undefined;
+}
+
+function getRetryableErrorCode(code: string | number | undefined): string | undefined {
+  return typeof code === 'string' ? code : undefined;
 }
 
 function extractRetryAfterMs(error: unknown): number | undefined {
@@ -149,4 +177,13 @@ function getErrorName(error: unknown): string | undefined {
   }
 
   return getStringProperty(error, 'name');
+}
+
+function sanitizeSensitiveText(value: string): string {
+  return value
+    .replace(/\+\d{7,15}\b/g, (phone) => maskPhoneNumber(phone))
+    .replace(
+      /\bAC[0-9a-fA-F]{32}\b/g,
+      (accountSid) => `${accountSid.slice(0, 4)}***${accountSid.slice(-4)}`,
+    );
 }

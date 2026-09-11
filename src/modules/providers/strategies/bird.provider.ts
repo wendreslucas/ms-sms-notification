@@ -3,6 +3,7 @@ import { ConfigService } from '@nestjs/config';
 
 import { SendSmsOptions, SendSmsResult, ISmsProvider } from '../interfaces/sms-provider.interface';
 import { normalizeBirdError } from '../provider-error-classifier';
+import { SmsProviderException, toSendSmsFailureResult } from '../sms-provider.exception';
 import { SmsProviderName } from '../sms-provider-name.enum';
 import { BIRD_CLIENT_FACTORY, BirdClientFactory, BirdSmsClient } from './bird-provider.tokens';
 
@@ -23,11 +24,13 @@ export class BirdProvider implements ISmsProvider {
     const originator = this.configService.get<string>('BIRD_ORIGINATOR') ?? '';
 
     if (!apiKey || !originator) {
-      return {
-        success: false,
-        error: 'Bird configuration is incomplete.',
-        isRetryable: false,
-      };
+      return toSendSmsFailureResult(
+        new SmsProviderException({
+          provider: this.providerName,
+          message: 'Bird configuration is incomplete.',
+          retryable: false,
+        }),
+      );
     }
 
     try {
@@ -53,12 +56,7 @@ export class BirdProvider implements ISmsProvider {
     } catch (error) {
       const normalizedError = normalizeBirdError(error);
 
-      return {
-        success: false,
-        error: normalizedError.message,
-        isRetryable: normalizedError.isRetryable,
-        retryAfterMs: normalizedError.retryAfterMs,
-      };
+      return toSendSmsFailureResult(normalizedError);
     }
   }
 

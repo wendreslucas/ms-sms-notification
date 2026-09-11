@@ -2,10 +2,12 @@ import { ConfigService } from '@nestjs/config';
 import { Test } from '@nestjs/testing';
 import { PinoLogger } from 'nestjs-pino';
 
+import { LogEvent } from '../../../common/enums/log-event.enum';
 import { SmsMessageNotFoundError } from '../../../common/errors/sms-message-not-found-error';
 import { ISmsProvider } from '../../providers/interfaces/sms-provider.interface';
 import { ProviderRegistryService } from '../../providers/provider-registry.service';
 import { ProviderRateLimiterService } from '../../providers/rate-limiting/provider-rate-limiter.service';
+import { SmsProviderException } from '../../providers/sms-provider.exception';
 import { SmsProviderName } from '../../providers/sms-provider-name.enum';
 import { QueueService } from '../../queue/queue.service';
 import { SmsMessage } from '../entities/sms-message.entity';
@@ -27,6 +29,13 @@ type RateLimiterMock = {
 
 type QueueServiceMock = {
   enqueueDeadLetter: jest.Mock<Promise<void>, [string]>;
+};
+
+type LoggerMock = {
+  setContext: jest.Mock;
+  info: jest.Mock;
+  warn: jest.Mock;
+  error: jest.Mock;
 };
 
 const MESSAGE_ID = 'c8d488e9-f308-43e8-8df0cb5134ef';
@@ -62,6 +71,7 @@ describe('SmsDispatcherService', () => {
   let providers: ISmsProvider[];
   let twilioProvider: ISmsProvider;
   let birdProvider: ISmsProvider;
+  let logger: LoggerMock;
 
   beforeEach(async () => {
     smsService = {
@@ -85,6 +95,12 @@ describe('SmsDispatcherService', () => {
     twilioProvider = buildProvider(SmsProviderName.TWILIO, 'SM_TWILIO');
     birdProvider = buildProvider(SmsProviderName.BIRD, 'BIRD_SMS');
     providers = [twilioProvider, birdProvider];
+    logger = {
+      setContext: jest.fn(),
+      info: jest.fn(),
+      warn: jest.fn(),
+      error: jest.fn(),
+    };
 
     const moduleRef = await Test.createTestingModule({
       providers: [
@@ -129,12 +145,7 @@ describe('SmsDispatcherService', () => {
         },
         {
           provide: PinoLogger,
-          useValue: {
-            setContext: jest.fn(),
-            info: jest.fn(),
-            warn: jest.fn(),
-            error: jest.fn(),
-          },
+          useValue: logger,
         },
       ],
     }).compile();
@@ -160,6 +171,7 @@ describe('SmsDispatcherService', () => {
       SmsProviderName.TWILIO,
       'SM_TWILIO',
     );
+    expect(findWarnEvent(LogEvent.PROVIDER_FAILED)).toBeUndefined();
   });
 
   it('throws and does not call provider when the message does not exist', async () => {
@@ -225,6 +237,37 @@ describe('SmsDispatcherService', () => {
     expect(smsService.markSent).toHaveBeenCalledWith(MESSAGE_ID, SmsProviderName.BIRD, 'BIRD_SMS');
   });
 
+  it('preserves domain provider exceptions thrown by a strategy', async () => {
+    twilioProvider.sendSms = jest.fn(async () => {
+      throw new SmsProviderException({
+        provider: SmsProviderName.TWILIO,
+        providerCode: 21608,
+        message: 'The number is unverified',
+        httpStatus: 400,
+        retryable: false,
+        providerMetadata: {
+          moreInfo: 'https://www.twilio.com/docs/errors/21608',
+        },
+      });
+    });
+
+    await dispatcher.dispatch(MESSAGE_ID);
+
+    expect(findWarnEvent(LogEvent.PROVIDER_FAILED)).toMatchObject({
+      event: LogEvent.PROVIDER_FAILED,
+      messageId: MESSAGE_ID,
+      provider: SmsProviderName.TWILIO,
+      providerCode: 21608,
+      httpStatus: 400,
+      retryable: false,
+      error: 'The number is unverified',
+      providerMetadata: {
+        moreInfo: 'https://www.twilio.com/docs/errors/21608',
+      },
+    });
+    expect(birdProvider.sendSms).toHaveBeenCalledTimes(1);
+  });
+
   it('retries a retryable failure and succeeds with the same provider', async () => {
     providers = [twilioProvider];
     twilioProvider.sendSms = jest
@@ -250,6 +293,15 @@ describe('SmsDispatcherService', () => {
       SmsProviderName.TWILIO,
       'SM_AFTER_RETRY',
     );
+    expect(findWarnEvent(LogEvent.PROVIDER_FAILED)).toMatchObject({
+      event: LogEvent.PROVIDER_FAILED,
+      messageId: MESSAGE_ID,
+      provider: SmsProviderName.TWILIO,
+      providerAttempt: 1,
+      totalAttempts: 1,
+      retryable: true,
+      error: 'rate limited',
+    });
   });
 
   it('fails over after retryable failures are exhausted', async () => {
@@ -282,6 +334,8 @@ describe('SmsDispatcherService', () => {
       success: false,
       error: 'invalid phone',
       isRetryable: false,
+      providerCode: 21608,
+      httpStatus: 400,
     }));
     birdProvider.sendSms = jest.fn(async () => ({
       success: true,
@@ -298,6 +352,21 @@ describe('SmsDispatcherService', () => {
       MESSAGE_ID,
       SmsProviderName.BIRD,
       'BIRD_PERMANENT_FAILOVER',
+    );
+
+    expect(findWarnEvent(LogEvent.PROVIDER_FAILED)).toMatchObject({
+      event: LogEvent.PROVIDER_FAILED,
+      messageId: MESSAGE_ID,
+      provider: SmsProviderName.TWILIO,
+      providerAttempt: 1,
+      totalAttempts: 1,
+      providerCode: 21608,
+      httpStatus: 400,
+      retryable: false,
+      error: 'invalid phone',
+    });
+    expect(warnEventIndex(LogEvent.PROVIDER_FAILED)).toBeLessThan(
+      warnEventIndex(LogEvent.PROVIDER_FAILOVER),
     );
   });
 
@@ -422,5 +491,17 @@ describe('SmsDispatcherService', () => {
     }
 
     return callOrder;
+  }
+
+  function findWarnEvent(event: LogEvent): Record<string, unknown> | undefined {
+    return logger.warn.mock.calls
+      .map(([record]) => record as Record<string, unknown>)
+      .find((record) => record.event === event);
+  }
+
+  function warnEventIndex(event: LogEvent): number {
+    return logger.warn.mock.calls.findIndex(
+      ([record]) => (record as Record<string, unknown>).event === event,
+    );
   }
 });

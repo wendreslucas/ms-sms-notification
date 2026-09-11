@@ -85,6 +85,58 @@ describe('TwilioProvider', () => {
     expect(result.retryAfterMs).toBe(10_000);
   });
 
+  it('preserves Twilio diagnostic fields without exposing sensitive values from the message', async () => {
+    const accountSid = ['AC', '1234567890abcdef1234567890abcdef'].join('');
+    const provider = buildProviderWithError(
+      Object.assign(
+        new Error(`The number +14155552671 is unverified for account ${accountSid}`),
+        {
+          code: 21608,
+          status: 400,
+          moreInfo: 'https://www.twilio.com/docs/errors/21608',
+        },
+      ),
+    );
+
+    const result = await provider.sendSms({
+      to: '+14155552671',
+      body: 'hello',
+      referenceId: 'message-id',
+    });
+
+    expect(result).toMatchObject({
+      success: false,
+      provider: SmsProviderName.TWILIO,
+      providerCode: 21608,
+      httpStatus: 400,
+      isRetryable: false,
+      providerMetadata: {
+        moreInfo: 'https://www.twilio.com/docs/errors/21608',
+      },
+    });
+    expect(result.error).toContain('+1415***2671');
+    expect(result.error).toContain('AC12***cdef');
+    expect(result.error).not.toContain('+14155552671');
+    expect(result.error).not.toContain(accountSid);
+  });
+
+  it('handles Twilio errors that have no code or status', async () => {
+    const provider = buildProviderWithError(new Error('Provider request failed upstream'));
+
+    const result = await provider.sendSms({
+      to: '+14155552671',
+      body: 'hello',
+      referenceId: 'message-id',
+    });
+
+    expect(result).toEqual({
+      success: false,
+      provider: SmsProviderName.TWILIO,
+      error: 'Provider request failed upstream',
+      isRetryable: false,
+    });
+  });
+
   it('omits statusCallback when no public base URL is configured', async () => {
     const create = jest.fn(async () => ({ sid: 'SM123' }));
     const factory: TwilioClientFactory = jest.fn(
@@ -138,6 +190,7 @@ describe('TwilioProvider', () => {
     expect(factory).not.toHaveBeenCalled();
     expect(result).toEqual({
       success: false,
+      provider: SmsProviderName.TWILIO,
       error: 'Twilio configuration is incomplete.',
       isRetryable: false,
     });

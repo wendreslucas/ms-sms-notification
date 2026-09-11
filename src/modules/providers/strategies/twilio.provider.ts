@@ -4,6 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { buildTwilioStatusCallbackUrl } from '../../webhooks/webhooks.constants';
 import { SendSmsOptions, SendSmsResult, ISmsProvider } from '../interfaces/sms-provider.interface';
 import { normalizeTwilioError } from '../provider-error-classifier';
+import { SmsProviderException, toSendSmsFailureResult } from '../sms-provider.exception';
 import { SmsProviderName } from '../sms-provider-name.enum';
 import {
   TWILIO_CLIENT_FACTORY,
@@ -29,11 +30,13 @@ export class TwilioProvider implements ISmsProvider {
     const from = this.configService.get<string>('TWILIO_PHONE_NUMBER') ?? '';
 
     if (!accountSid || !authToken || !from) {
-      return {
-        success: false,
-        error: 'Twilio configuration is incomplete.',
-        isRetryable: false,
-      };
+      return toSendSmsFailureResult(
+        new SmsProviderException({
+          provider: this.providerName,
+          message: 'Twilio configuration is incomplete.',
+          retryable: false,
+        }),
+      );
     }
 
     try {
@@ -53,12 +56,7 @@ export class TwilioProvider implements ISmsProvider {
     } catch (error) {
       const normalizedError = normalizeTwilioError(error);
 
-      return {
-        success: false,
-        error: normalizedError.message,
-        isRetryable: normalizedError.isRetryable,
-        retryAfterMs: normalizedError.retryAfterMs,
-      };
+      return toSendSmsFailureResult(normalizedError);
     }
   }
 
